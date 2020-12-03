@@ -1,0 +1,3 @@
+KeyError in line 21 of /home/800/bxs800/scripts/snakemake/recepies/trimSPADES/snakefile:
+'hisat2'
+  File "/home/800/bxs800/scripts/snakemake/recepies/trimSPADES/snakefile", line 21, in <module>

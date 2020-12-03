@@ -1,0 +1,32 @@
+###Sample in path
+untrimmedPath : "/scratch/xf3/bxs800/data/Illumina/Pst/SRA/untrimmed"
+
+trimmedPath  : "/scratch/xf3/bxs800/data/Illumina/Pst/SRA/trimmed"
+
+
+###Abspath to components
+fastqc : "/home/800/bxs800/programs/FastQC/fastqc"
+
+trimmomatic : "/home/800/bxs800/programs/Trimmomatic-0.39/trimmomatic-0.39.jar"
+
+adapters : "/home/800/bxs800/programs/Trimmomatic-0.39/adapters/all_adapters.fa"
+
+#bwa components
+
+bwa_ref : "/scratch/xf3/bxs800/analysis/Pst104E/bwa_genomes/Pst_104E_v13_p_ctg.fa"
+
+bwa_reffai : "/scratch/xf3/bxs800/analysis/Pst104E/bwa_genomes/Pst_104E_v13_p_ctg.fa.fai"
+
+bwa_refname : "Pst_104E_v13_p_ctg"
+
+bwa_sortT : "4"
+
+bwa_mapT : "12"
+
+bwa_indexT : "16"
+
+MappedPath : "/scratch/xf3/bxs800/analysis/Pst104E/Pst_104E_v13_p_ctg/bwa_mapped"
+
+bcfT : 6
+
+freebayesT: 16

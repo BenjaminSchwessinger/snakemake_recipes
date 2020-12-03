@@ -1,0 +1,13 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	all
+	1	combinedTrinityGG
+	2
+
+[Fri Nov 20 17:23:25 2020]
+rule combinedTrinityGG:
+    input: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted.bam
+    output: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted2.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta
+    jobid: 47
+

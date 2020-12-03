@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	all
+	1	fastqQCpre
+	4	trimmomatic
+	6
+
+[Wed Nov 11 14:19:18 2020]
+rule trimmomatic:
+    input: /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR140_L002R1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR140_L002R2.fastq.gz
+    output: /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR140/DMTRCTR140_L002R1.trimmed.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR140/DMTRCTR140_L002R2.trimmed.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR140/DMTRCTR140_L002R3.trimmed.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR140/DMTRCTR140_L002tmp1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR140/DMTRCTR140_L002tmp2.fastq.gz
+    jobid: 3
+    wildcards: sample=DMTRCTR140, lane=L002
+
+
+[Wed Nov 11 14:19:18 2020]
+rule trimmomatic:
+    input: /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR7788_L002R1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR7788_L002R2.fastq.gz
+    output: /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR7788/DMTRCTR7788_L002R1.trimmed.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR7788/DMTRCTR7788_L002R2.trimmed.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR7788/DMTRCTR7788_L002R3.trimmed.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR7788/DMTRCTR7788_L002tmp1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/trimmeddata/DMTRCTR7788/DMTRCTR7788_L002tmp2.fastq.gz
+    jobid: 5
+    wildcards: sample=DMTRCTR7788, lane=L002
+
+
+[Wed Nov 11 14:19:18 2020]
+rule fastqQCpre:
+    input: /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR140_L001R1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR140_L002R1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR7788_L001R1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR7788_L002R1.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR140_L001R2.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR140_L002R2.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR7788_L001R2.fastq.gz, /scratch/be39/bxs800/fungalgenomes/rawdata/DMTRCTR7788_L002R2.fastq.gz
+    output: /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR140/DMTRCTR140_L001R1.fastqc.done, /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR140/DMTRCTR140_L002R1.fastqc.done, /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR140/DMTRCTR140_L001R2.fastqc.done, /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR140/DMTRCTR140_L002R2.fastqc.done, /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR7788/DMTRCTR7788_L001R1.fastqc.done, /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR7788/DMTRCTR7788_L002R1.fastqc.done, /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR7788/DMTRCTR7788_L001R2.fastqc.done, /scratch/be39/bxs800/fungalgenomes/rawdata/../FASTQC/PRE/DMTRCTR7788/DMTRCTR7788_L002R2.fastqc.done
+    jobid: 1
+
+RuleException in line 16 of /home/800/bxs800/scripts/snakemake/recepies/trimSPADES/snakefile:
+'OutputFiles' object has no attribute 'outdir'
+  File "/home/800/bxs800/miniconda3/envs/snakemake/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 111, in run_jobs
+  File "/home/800/bxs800/miniconda3/envs/snakemake/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 120, in run
+  File "/home/800/bxs800/miniconda3/envs/snakemake/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 131, in _run
+  File "/home/800/bxs800/miniconda3/envs/snakemake/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 151, in printjob
+  File "/home/800/bxs800/miniconda3/envs/snakemake/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 137, in printjob

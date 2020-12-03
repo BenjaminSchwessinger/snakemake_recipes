@@ -1,0 +1,32 @@
+__default__:
+  mem: 12G
+  queue: normal
+  time: '01:00:00'
+  jobfs: 1G
+  project: xf3
+  name: "SNK_{rule}"
+  threads: 1
+
+trimmomatic :
+  threads: 16
+
+fastqQCpre :
+  threads: 16
+ 
+fastqQCpost :  
+  threads: 16
+
+bwa_map:
+  time: '6:00:00'
+  mem: 24G
+  threads: 16
+
+bcftools_call:
+  time: '6:00:00'
+  mem: 24G
+  threads: 16
+
+freebayes:
+  time: '2:00:00'
+  mem: 24G
+  threads: 16

@@ -1,0 +1,40 @@
+__default__:
+  mem: 12G
+  queue: normal
+  time: '01:00:00'
+  jobfs: 1G
+  project: xf3
+  name: "SNK_{rule}"
+  threads: 1
+
+fastqQCpre :
+  threads: 2
+  mem: 24G
+
+trimmomatic :
+ threads: 4
+ time : '04:00:00'
+
+fastqQCpost :
+ threads: 8
+ mem: 24G
+
+hisat2A:
+  time: '12:00:00'
+  mem: 32G
+  threads: 16
+ 
+samtoolMerge:
+  time: '12:00:00'
+  mem: 68G
+  threads: 16
+
+trinityA:
+  time: '12:00:00'
+  mem: 68G
+  threads: 16
+
+combinedTrinityGG:
+  time: '48:00:00'
+  mem: 68G
+  threads: 16

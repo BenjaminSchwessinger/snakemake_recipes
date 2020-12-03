@@ -1,0 +1,20 @@
+Building DAG of jobs...
+File path /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined//trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta contains double '/'. This is likely unintended. It can also lead to inconsistent results of the file-matching approach used by Snakemake.
+File path /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined//trinity/Trinity-GG.fasta contains double '/'. This is likely unintended. It can also lead to inconsistent results of the file-matching approach used by Snakemake.
+File path /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined//trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta contains double '/'. This is likely unintended. It can also lead to inconsistent results of the file-matching approach used by Snakemake.
+Using shell: /bin/bash
+Provided cluster nodes: 1000
+Job counts:
+	count	jobs
+	1	all
+	1	combinedTrinityGG
+	2
+
+[Thu Nov 19 16:28:21 2020]
+rule combinedTrinityGG:
+    input: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted.bam
+    output: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined//trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined//trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta
+    jobid: 47
+
+Submitted job 47 with external jobid '13647215.gadi-pbs'.
+Will exit after finishing currently running jobs.

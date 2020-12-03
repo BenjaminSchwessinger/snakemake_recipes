@@ -1,0 +1,144 @@
+import os
+configfile : "trim_config.yaml"
+
+
+SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]))
+#SAMPLES.sort()
+#SAMPLES = SAMPLES[:10]
+print(SAMPLES)
+
+rule all:
+    input:
+        expand("{path}/../FASTQC/PRE/{sample}/fastqc.done", sample=SAMPLES, path=config["untrimmedPath"]),
+        expand("{path}/{sample}/{sample}.done",sample=SAMPLES, path=config["trimmedPath"]),
+        #expand("{path}/{sample}/{sample}.SRAfix.done", sample=SAMPLES, path=config["trimmedPath"]),
+        #expand("{path}/{sample}/{ref}.bwa_mem.{sample}.bam", sample=SAMPLES, path=config["MappedPath"], ref=config["bwa_refname"]),
+        expand("{path}/../FASTQC/POST/{sample}/fastqc.done", sample=SAMPLES, path=config["untrimmedPath"]), 
+#expand("{path}/{sample}/{ref}.bwa_mem.{sample}.bcftools.filt.vcf", sample=SAMPLES, path=config["MappedPath"], ref=config["bwa_refname"]),
+        #expand("{path}/{sample}/{ref}.bwa_mem.{sample}.freebayes.filt.vcf", sample=SAMPLES, path=config["MappedPath"], ref=config["bwa_refname"])
+        expand("{path}/{sample}/{sample}_refHetFreqSpec.png", sample=SAMPLES, path=config["MappedPath"])
+
+rule fastqQCpre:
+    input:
+        read1=config["untrimmedPath"]  + "/{sample}_pass_1.fastq.gz",
+	read2=config["untrimmedPath"] +  "/{sample}_pass_2.fastq.gz"
+    output:
+        outdir=directory(config["untrimmedPath"] + "/../FASTQC/PRE/{sample}"),
+        fastqQCpredone= config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}/fastqc.done"
+    shell:
+        "{config[fastqc]} {input.read1} {input.read2} --outdir={output.outdir};"
+	"touch {output.fastqQCpredone}"
+
+
+rule trimmomatic:
+    input:
+        read1=config["untrimmedPath"]  + "/{sample}_pass_1.fastq.gz",
+        read2=config["untrimmedPath"] +  "/{sample}_pass_2.fastq.gz"
+    output:
+        tpread1= config["trimmedPath"] +  "/{sample}/{sample}_1.fastq.gz",
+	tpread2= config["trimmedPath"] +  "/{sample}/{sample}_2.fastq.gz",
+	tpread3= config["trimmedPath"] +  "/{sample}/{sample}_3.fastq.gz",
+	tmp1= config["trimmedPath"] + "/{sample}/{sample}_tmp1.fastq.gz",
+        tmp2= config["trimmedPath"] + "/{sample}/{sample}_tmp2.fastq.gz",
+        trimmomatic_done= config["trimmedPath"] +"/{sample}/{sample}.done"
+    shell:
+        "java -jar {config[trimmomatic]} PE {input.read1} {input.read2} {output.tpread1} {output.tmp1} \
+	{output.tpread2} {output.tmp2} ILLUMINACLIP:{config[adapters]}:2:30:10:4:keepBothReads LEADING:3 TRAILING:3 MINLEN:36;"
+	"cat {output.tmp1} {output.tmp2} > {output.tpread3};"
+	"touch {output.trimmomatic_done}"
+
+rule fix_SRA:
+    input:
+        tpread1= config["trimmedPath"] +  "/{sample}/{sample}_1.fastq.gz",
+        tpread2= config["trimmedPath"] +  "/{sample}/{sample}_2.fastq.gz",
+        tpread3= config["trimmedPath"] +  "/{sample}/{sample}_3.fastq.gz",
+        tmp1= config["trimmedPath"] + "/{sample}/{sample}_tmp1.fastq.gz",
+        tmp2= config["trimmedPath"] + "/{sample}/{sample}_tmp2.fastq.gz",
+    output:
+        fixSRAdone= config["trimmedPath"] + "/{sample}/{sample}.SRAfix.done"
+    params:
+        sed=r"s/^((@|\+)[S,E]RR[^.]+\.[^.]+)\.(1|2)/\1/"
+    shell:
+        "rm {input.tmp1} {input.tmp2};"
+        "zcat {input.tpread1} | sed -E '{params.sed}' | gzip > {config[trimmedPath]}/{wildcards.sample}/tmp;"
+        "mv {config[trimmedPath]}/{wildcards.sample}/tmp {input.tpread1};"
+	"zcat {input.tpread2} | sed -E '{params.sed}' | gzip > {config[trimmedPath]}/{wildcards.sample}/tmp;"
+        "mv {config[trimmedPath]}/{wildcards.sample}/tmp {input.tpread2};"
+        "zcat {input.tpread3} | sed -E '{params.sed}' | gzip > {config[trimmedPath]}/{wildcards.sample}/tmp;"
+        "mv {config[trimmedPath]}/{wildcards.sample}/tmp {input.tpread3};"
+        "touch {output.fixSRAdone}"
+
+rule fastqQCpost:
+    input:
+        in0= config["trimmedPath"] + "/{sample}/{sample}.SRAfix.done",
+        in1= config["trimmedPath"] + "/{sample}/{sample}_1.fastq.gz",
+	in2= config["trimmedPath"] + "/{sample}/{sample}_2.fastq.gz",
+	in3=config["trimmedPath"] + "/{sample}/{sample}_3.fastq.gz",
+    output:
+        postoutdir=directory(config["untrimmedPath"] + "/../FASTQC/POST/{sample}/"),
+        fastqQCpostdone= config["untrimmedPath"] + "/../FASTQC/POST/{sample}/fastqc.done"
+    shell:
+        "{config[fastqc]} {input.in1} {input.in2} {input.in3}  --outdir={output.postoutdir};"
+	"touch {output.fastqQCpostdone}"
+
+
+
+rule bwa_map:
+    input:
+        config["trimmedPath"] +"/{sample}/{sample}.SRAfix.done",
+        ref=config["bwa_ref"],
+	tpread1= config["trimmedPath"] + "/{sample}/{sample}_1.fastq.gz",
+        tpread2= config["trimmedPath"] + "/{sample}/{sample}_2.fastq.gz",
+    params:
+        rg=r"@RG\tID:{sample}\tSM:{sample}\tPL:ILLUMINA\tLB:{sample}_lib1"
+    output:
+        bam= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam",
+        bai= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam.bai",
+    shell:
+        "bwa mem -R '{params.rg}' -t {config[bwa_mapT]} {input.ref} {input.tpread1} {input.tpread2} | samtools sort -O BAM -@ {config[bwa_sortT]} -o {output.bam} -;"
+        "samtools index -@ {config[bwa_indexT]} {output.bam}"
+
+#rule bcftools_call:
+#    input:
+#        bam=expand("{path}/{sample}/{ref}.bwa_mem.{sample}.bam", sample=SAMPLES, path=config["MappedPath"], ref=config["bwa_refname"]),
+#        bai=expand("{path}/{sample}/{ref}.bwa_mem.{sample}.bam.bai", sample=SAMPLES, path=config["MappedPath"], ref=config["bwa_refname"])
+#    output:
+#        vcf=expand("{path}/{sample}/{ref}.bwa_mem.{sample}.bcftools.filt.vcf", sample=SAMPLES, path=config["MappedPath"], ref=config["bwa_refname"])
+#    params:
+#        vcfFilter=r"%QUAL<20 || DP>300"
+#    shell:
+#        "bcftools mpileup --threads {config[bcfT]} -Ou -f {rules.bwa_map.input.ref} {input.bam} | "
+#        "bcftools call --threads {config[bcfT]} -Ou -mv | "
+#        "bcftools filter --threads {config[bcfT]}  -s LowQual -e '{params.vcfFilter}' > {output.vcf}"
+
+rule freebayes:
+    input:
+        bam= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam",
+        bai= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam.bai",        
+        fai=config["bwa_reffai"]
+    output:
+        vcf=  config["MappedPath"] + "/{sample}/" + config["bwa_refname"] + ".bwa_mem.{sample}.freebayes.vcf",
+        vcffil= config["MappedPath"] + "/{sample}/" + config["bwa_refname"] + ".bwa_mem.{sample}.freebayes.filt.vcf"
+    envmodules:
+        "freebayes/1.3.1"
+    params:
+        vcfFilter=r"%QUAL<20 || INFO/DP>300 || INFO/DP<5",
+        freebayesModule="freebayes/1.3.1",
+	parallel="parallel/20191022"
+    shell:
+        "module load {params.freebayesModule} {params.parallel};"
+        "module list;"
+        "freebayes-parallel <(fasta_generate_regions.py {input.fai}  100000) {config[freebayesT]} "
+        "-f {rules.bwa_map.input.ref} {input.bam} > {output.vcf};"
+        "bcftools filter --threads {config[freebayesT]}  -s LowQual -e '{params.vcfFilter}' {output.vcf} > {output.vcffil}"
+
+rule het_QC:
+    input:
+        vcffil= config["MappedPath"] + "/{sample}/" + config["bwa_refname"] + ".bwa_mem.{sample}.freebayes.filt.vcf"
+    output:
+        QCplot= config["MappedPath"] + "/{sample}/{sample}_refHetFreqSpec.png",
+    params:
+        sample="{sample}"
+    shell:
+        #"conda activate snakemake;"
+        "python3 /home/800/bxs800/scripts/python/hetFreqPlot.py {input.vcffil} {params.sample}" 

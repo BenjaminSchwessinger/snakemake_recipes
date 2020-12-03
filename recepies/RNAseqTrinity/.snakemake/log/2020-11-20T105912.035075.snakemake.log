@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cluster nodes: 1000
+Job counts:
+	count	jobs
+	1	all
+	1	combinedTrinityGG
+	2
+
+[Fri Nov 20 10:59:13 2020]
+rule combinedTrinityGG:
+    input: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted.bam
+    output: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta
+    jobid: 47
+
+Submitted job 47 with external jobid '13663265.gadi-pbs'.
+[Fri Nov 20 12:33:25 2020]
+Error in rule combinedTrinityGG:
+    jobid: 47
+    output: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta
+    shell:
+        Trinity --jaccard_clip --max_memory 60G           --genome_guided_bam /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted.bam           --genome_guided_max_intron 3000 --CPU 16 --output /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/;cp /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Trinity-GG.fasta /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 13663265.gadi-pbs
+
+Error executing rule combinedTrinityGG on cluster (jobid: 47, external: 13663265.gadi-pbs, jobscript: /home/800/bxs800/scripts/snakemake/recepies/RNAseqTrinity/.snakemake/tmp.60ngyyro/snakejob.combinedTrinityGG.47.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/800/bxs800/scripts/snakemake/recepies/RNAseqTrinity/.snakemake/log/2020-11-20T105912.035075.snakemake.log

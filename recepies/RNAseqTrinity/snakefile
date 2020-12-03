@@ -1,0 +1,141 @@
+import os
+configfile : "config.yaml"
+
+
+SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"]) if x.endswith('fq.gz')]))
+SAMPLES.sort()
+#SAMPLES = SAMPLES[:3]
+TREATMENTS = list(set([x[:2] for x in SAMPLES]))
+TREATMENTS.sort()
+REPS = list(set([x[2] for x in SAMPLES]))
+REPS.sort()
+print(SAMPLES)
+print(TREATMENTS)
+print(REPS)
+
+localrules: combineTrinityA, fixTrinityNames
+
+rule all:
+    input:
+        expand("{path}/../FASTQC/PRE/{sample}/fastqc.done", sample=SAMPLES, path=config["untrimmedPath"]),
+        expand("{path}/{sample}/{sample}.done",sample=SAMPLES, path=config["trimmedPath"]),
+        expand("{path}/../FASTQC/POST/{sample}/fastqc.done", sample=SAMPLES, path=config["untrimmedPath"]),
+	expand(config["hisat2"] + "/{sample}/" + config["hisat2_ref"][0] + ".{sample}.sorted.bam", sample=TREATMENTS),
+        expand(config["hisat2"]+ "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fasta", sample=TREATMENTS),
+        config["hisat2"] + "/../trinityGG/combined/" + config["hisat2_ref"][0] + ".Trinity-GG.combined.fasta",
+        config["hisat2"] + "/combined/" + config["hisat2_ref"][0] + ".combined.sorted.bam",
+        config["hisat2"] + "/../trinityGG/combined/trinity/" + config["hisat2_ref"][0] + ".Trinity-GG.runcombined.fasta"
+
+rule fastqQCpre:
+    input:
+        read1=config["untrimmedPath"]  + "/{sample}_1.fq.gz",
+	read2=config["untrimmedPath"] +  "/{sample}_2.fq.gz"
+    output:
+        outdir=directory(config["untrimmedPath"] + "/../FASTQC/PRE/{sample}"),
+        fastqQCpredone= config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}/fastqc.done"
+    shell:
+        "{config[fastqc]} {input.read1} {input.read2} --outdir={output.outdir};"
+	"touch {output.fastqQCpredone}"
+
+
+rule trimmomatic:
+    input:
+        read1=config["untrimmedPath"]  + "/{sample}_1.fq.gz",
+        read2=config["untrimmedPath"] +  "/{sample}_2.fq.gz"
+    output:
+        tpread1= config["trimmedPath"] +  "/{sample}/{sample}_1.fastq.gz",
+	tpread2= config["trimmedPath"] +  "/{sample}/{sample}_2.fastq.gz",
+	tpread3= config["trimmedPath"] +  "/{sample}/{sample}_3.fastq.gz",
+	tmp1=temp(config["trimmedPath"] + "/{sample}/{sample}_tmp1.fastq.gz"),
+        tmp2=temp(config["trimmedPath"] + "/{sample}/{sample}_tmp2.fastq.gz"),
+        trimmomatic_done= config["trimmedPath"] +"/{sample}/{sample}.done"
+    shell:
+        "java -jar {config[trimmomatic]} PE {input.read1} {input.read2} {output.tpread1} {output.tmp1} \
+	{output.tpread2} {output.tmp2} ILLUMINACLIP:{config[adapters]}:2:30:10:4:keepBothReads LEADING:3 TRAILING:3 MINLEN:36;"
+	"cat {output.tmp1} {output.tmp2} > {output.tpread3};"
+	"touch {output.trimmomatic_done}"
+
+
+rule fastqQCpost:
+    input:
+        in1= config["trimmedPath"] + "/{sample}/{sample}_1.fastq.gz",
+	in2= config["trimmedPath"] + "/{sample}/{sample}_2.fastq.gz",
+	in3= config["trimmedPath"] + "/{sample}/{sample}_3.fastq.gz",
+    output:
+        postoutdir=directory(config["untrimmedPath"] + "/../FASTQC/POST/{sample}/"),
+        fastqQCpostdone= config["untrimmedPath"] + "/../FASTQC/POST/{sample}/fastqc.done"
+    shell:
+        "{config[fastqc]} {input.in1} {input.in2} {input.in3}  --outdir={output.postoutdir};"
+	"touch {output.fastqQCpostdone}"
+
+rule hisat2A:
+    input:
+        in1=expand(config["trimmedPath"] + "/{{sample}}{rep}/{{sample}}{rep}_1.fastq.gz", rep=REPS),
+        in2=expand(config["trimmedPath"] + "/{{sample}}{rep}/{{sample}}{rep}_2.fastq.gz",  rep=REPS)
+    params:
+        in1=','.join(expand(config["trimmedPath"] + "/{{sample}}{rep}/{{sample}}{rep}_1.fastq.gz", rep=REPS)),
+        in2=','.join(expand(config["trimmedPath"] + "/{{sample}}{rep}/{{sample}}{rep}_2.fastq.gz",  rep=REPS))
+    output:
+        bam=config["hisat2"] + "/{sample}/" + config["hisat2_ref"][0] + ".{sample}.sorted.bam",
+    wildcard_constraints:
+        sample=".{2}"
+    shell:
+        "hisat2 --max-intronlen 3000 --threads {config[hisat2_mapT]} -x {config[hisat2_refPATH][0]} --dta \
+	-1 {params.in1} -2 {params.in2} --no-unal | samtools sort -O BAM -@ {config[hisat2_sortT]} -o {output.bam} -;"
+        "samtools index -@ {config[hisat2_indexT]} {output.bam}"
+
+rule trinityA:
+    input:
+        bam=config["hisat2"] + "/{sample}/" + config["hisat2_ref"][0] + ".{sample}.sorted.bam",
+    output:
+        trinityfa=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fasta",
+    params:
+        outdir=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/"
+    wildcard_constraints:
+        sample=".{2}"
+    shell:
+        "Trinity --jaccard_clip --max_memory 60G \
+          --genome_guided_bam {input.bam} \
+          --genome_guided_max_intron 3000 --CPU 16 --output {params.outdir}"
+
+rule fixTrinityNames:
+    input:
+        trinityfa=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fasta"
+    output:
+       trinityFixfa=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fix.fasta"
+    shell:
+       "sed 's/GG/{wildcards.sample}/' {input.trinityfa} > {output.trinityFixfa};"
+
+rule combineTrinityA:
+    input:
+        trinityfa=expand(config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fix.fasta", sample=TREATMENTS),
+    output:
+        trinitycombined=config["hisat2"] + "/../trinityGG/combined/" + config["hisat2_ref"][0] + ".Trinity-GG.combined.fasta"
+    shell:
+        "cat {input.trinityfa} > {output.trinitycombined}"
+
+rule samtoolMerge:
+    input:
+        bams=expand(config["hisat2"] + "/{sample}/" + config["hisat2_ref"][0] + ".{sample}.sorted.bam", sample=TREATMENTS),
+    output:
+        bamcombined=config["hisat2"] + "/combined/" + config["hisat2_ref"][0] + ".combined.sorted.bam"
+    shell:
+        "samtools merge -@ 16 {output.bamcombined} {input.bams};"
+        "samtools index -@ 16 {output.bamcombined}"
+
+rule combinedTrinityGG:
+    input:
+        bamcombined=config["hisat2"] + "/combined/" + config["hisat2_ref"][0] + ".combined.sorted.bam"
+    output:
+        bamcombined2=config["hisat2"] + "/combined/" + config["hisat2_ref"][0] + ".combined.sorted2.bam",
+        trinityfa=config["hisat2"] + "/../trinityGG/combined/trinity/Trinity-GG.fasta",
+        trinityfarename=config["hisat2"] + "/../trinityGG/combined/trinity/" + config["hisat2_ref"][0] + ".Trinity-GG.runcombined.fasta"
+    params:
+        outdir=config["hisat2"] + "/../trinityGG/combined/trinity/"
+    shell:
+        "samtools sort -@ 16 -o {output.bamcombined2} {input.bamcombined};"
+        "samtools index -@ 16 {output.bamcombined2};" 
+        "Trinity --jaccard_clip --max_memory 60G \
+          --genome_guided_bam {output.bamcombined2} \
+          --genome_guided_max_intron 3000 --CPU 16 --output {params.outdir};"
+        "cp {output.trinityfa} {output.trinityfarename}"  

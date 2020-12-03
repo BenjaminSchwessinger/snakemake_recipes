@@ -1,0 +1,17 @@
+__default__:
+  mem: 12G
+  queue: express
+  time: '01:00:00'
+  jobfs: 1G
+  project: xf3
+  name: "SNK_{rule}"
+  threads: 1
+
+fastqQCpre :
+  threads: 2
+  
+
+bwa_map:
+  time: '6:00:00'
+  mem: 12G
+

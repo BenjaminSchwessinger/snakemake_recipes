@@ -1,0 +1,4 @@
+Building DAG of jobs...
+WildcardError in line 45 of /home/800/bxs800/scripts/snakemake/recepies/trimSPADES/snakefile:
+Wildcards in input files cannot be determined from output files:
+'lane'

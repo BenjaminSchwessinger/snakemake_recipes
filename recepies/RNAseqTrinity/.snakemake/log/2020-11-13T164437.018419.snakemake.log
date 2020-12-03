@@ -1,0 +1,17 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cluster nodes: 1000
+Job counts:
+	count	jobs
+	1	all
+	1	samtoolMerge
+	2
+
+[Fri Nov 13 16:44:37 2020]
+rule samtoolMerge:
+    input: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/6D/Pst198E16_v1.6D.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/9D/Pst198E16_v1.9D.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/GS/Pst198E16_v1.GS.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/US/Pst198E16_v1.US.sorted.bam
+    output: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted.bam
+    jobid: 46
+
+Submitted job 46 with external jobid '13497556.gadi-pbs'.
+Will exit after finishing currently running jobs.

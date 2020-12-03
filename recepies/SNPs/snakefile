@@ -1,0 +1,73 @@
+import os
+configfile : "trim_config.yaml"
+
+
+SAMPLES = list(set([x for x in os.listdir(config["trimmedPath"]) if os.path.isdir(os.path.join(config["trimmedPath"] ,x))]))
+print(SAMPLES)
+
+rule all:
+    input:
+        expand("{path}/{sample}/{ref}.bwa_mem.{sample}.freebayes.filt.vcf", sample=SAMPLES, path=config["MappedPath"], ref=config["bwa_refname"]),
+        expand("{path}/{sample}/{sample}_refHetFreqSpec.png", sample=SAMPLES, path=config["MappedPath"])
+
+
+rule fastqQCpost:
+    input:
+        in1= config["trimmedPath"] + "/{sample}/{sample}_1.fastq.gz",
+	in2= config["trimmedPath"] + "/{sample}/{sample}_2.fastq.gz",
+	in3=config["trimmedPath"] + "/{sample}/{sample}_3.fastq.gz",
+    output:
+        postoutdir=directory(config["trimmedPath"] + "/../FASTQC/POST/{sample}/"),
+        fastqQCpostdone= config["trimmedPath"] + "/../FASTQC/POST/{sample}/fastqc.done"
+    shell:
+        "{config[fastqc]} {input.in1} {input.in2} {input.in3}  --outdir={output.postoutdir};"
+	"touch {output.fastqQCpostdone}"
+
+
+
+rule bwa_map:
+    input:
+        ref=config["bwa_ref"],
+	tpread1= config["trimmedPath"] + "/{sample}/{sample}_1.fastq.gz",
+        tpread2= config["trimmedPath"] + "/{sample}/{sample}_2.fastq.gz",
+    params:
+        rg=r"@RG\tID:{sample}\tSM:{sample}\tPL:ILLUMINA\tLB:{sample}_lib1"
+    output:
+        bam= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam",
+        bai= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam.bai",
+    shell:
+        "bwa mem -R '{params.rg}' -t {config[bwa_mapT]} {input.ref} {input.tpread1} {input.tpread2} | samtools sort -O BAM -@ {config[bwa_sortT]} -o {output.bam} -;"
+        "samtools index -@ {config[bwa_indexT]} {output.bam}"
+
+
+rule freebayes:
+    input:
+        bam= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam",
+        bai= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam.bai",        
+        fai=config["bwa_reffai"]
+    output:
+        vcf=  config["MappedPath"] + "/{sample}/" + config["bwa_refname"] + ".bwa_mem.{sample}.freebayes.vcf",
+        vcffil= config["MappedPath"] + "/{sample}/" + config["bwa_refname"] + ".bwa_mem.{sample}.freebayes.filt.vcf"
+    envmodules:
+        "freebayes/1.3.1"
+    params:
+        vcfFilter=r"%QUAL<20 || INFO/DP>300 || INFO/DP<5",
+        freebayesModule="freebayes/1.3.1",
+	parallel="parallel/20191022"
+    shell:
+        "module load {params.freebayesModule} {params.parallel};"
+        "module list;"
+        "freebayes-parallel <(fasta_generate_regions.py {input.fai}  100000) {config[freebayesT]} "
+        "-f {rules.bwa_map.input.ref} {input.bam} > {output.vcf};"
+        "bcftools filter --threads {config[freebayesT]}  -s LowQual -e '{params.vcfFilter}' {output.vcf} > {output.vcffil}"
+
+rule het_QC:
+    input:
+        vcffil= config["MappedPath"] + "/{sample}/" + config["bwa_refname"] + ".bwa_mem.{sample}.freebayes.filt.vcf"
+    output:
+        QCplot= config["MappedPath"] + "/{sample}/{sample}_refHetFreqSpec.png",
+    params:
+        sample="{sample}"
+    shell:
+        #"conda activate snakemake;"
+        "python3 /home/800/bxs800/scripts/python/hetFreqPlot.py {input.vcffil} {params.sample}" 

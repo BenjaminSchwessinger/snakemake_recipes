@@ -1,0 +1,32 @@
+###Sample in path
+untrimmedPath : "/scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed"
+
+trimmedPath  : "/scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed"
+
+
+###Abspath to components
+fastqc : "/home/800/bxs800/programs/FastQC/fastqc"
+
+trimmomatic : "/home/800/bxs800/programs/Trimmomatic-0.39/trimmomatic-0.39.jar"
+
+adapters : "/home/800/bxs800/programs/Trimmomatic-0.39/adapters/all_adapters.fa"
+
+#Analysis path
+hisat2 : "/scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq"
+
+trinity : "/scratch/xf3/bxs800/analysis/Pst198E16_v1/trinity"
+
+#hisat2 components
+
+hisat2_refPATH : ["/scratch/xf3/bxs800/analysis/Pst198E16_v1/hisat2Index/Pst198E16_v1", "/scratch/xf3/bxs800/analysis/Pst198E16_v1/hisat2Index/Pst198E16_v1_A_u", "/scratch/xf3/bxs800/analysis/Pst198E16_v1/hisat2Index/Pst198E16_v1_B_u"]
+
+hisat2_ref : [ "Pst198E16_v1", "Pst198E16_v1_A_u", "Pst198E16_v1_B_u"]
+
+hisat2_sortT : "4"
+
+hisat2_mapT : "12"
+
+hisat2_indexT : "16"
+
+
+

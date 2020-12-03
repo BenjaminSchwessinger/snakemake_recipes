@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cluster nodes: 1000
+Job counts:
+	count	jobs
+	1	all
+	1	combinedTrinityGG
+	2
+
+[Fri Nov 20 17:27:11 2020]
+rule combinedTrinityGG:
+    input: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted.bam
+    output: /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted2.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta
+    jobid: 47
+
+Submitted job 47 with external jobid '13670254.gadi-pbs'.
+[Fri Nov 20 22:38:09 2020]
+Finished job 47.
+1 of 2 steps (50%) done
+
+[Fri Nov 20 22:38:10 2020]
+localrule all:
+    input: /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/6D1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/6D2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/6D3/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/9D1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/9D2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/9D3/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/GS1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/GS2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/GS3/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/US1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/US2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/PRE/US3/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/6D1/6D1.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/6D2/6D2.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/6D3/6D3.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/9D1/9D1.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/9D2/9D2.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/9D3/9D3.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/GS1/GS1.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/GS2/GS2.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/GS3/GS3.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/US1/US1.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/US2/US2.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed/US3/US3.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/6D1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/6D2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/6D3/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/9D1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/9D2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/9D3/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/GS1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/GS2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/GS3/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/US1/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/US2/fastqc.done, /scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed/../FASTQC/POST/US3/fastqc.done, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/6D/Pst198E16_v1.6D.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/9D/Pst198E16_v1.9D.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/GS/Pst198E16_v1.GS.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/US/Pst198E16_v1.US.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/6D/Pst198E16_v1/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/9D/Pst198E16_v1/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/GS/Pst198E16_v1/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/US/Pst198E16_v1/trinity/Trinity-GG.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/Pst198E16_v1.Trinity-GG.combined.fasta, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/combined/Pst198E16_v1.combined.sorted.bam, /scratch/xf3/bxs800/analysis/Pst198E16_v1/RNAseq/../trinityGG/combined/trinity/Pst198E16_v1.Trinity-GG.runcombined.fasta
+    jobid: 0
+
+[Fri Nov 20 22:38:10 2020]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /home/800/bxs800/scripts/snakemake/recepies/RNAseqTrinity/.snakemake/log/2020-11-20T172710.433625.snakemake.log

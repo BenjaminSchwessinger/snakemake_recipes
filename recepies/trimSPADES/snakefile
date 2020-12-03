@@ -1,0 +1,55 @@
+import os
+configfile : "config.yaml"
+
+
+SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]))
+SAMPLES.sort()
+#SAMPLES = SAMPLES[:3]
+print(SAMPLES)
+
+rule all:
+    input:
+        expand(config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}/{sample}_{lane}R{number}.fastqc.done" , sample=SAMPLES, number=["1","2"], lane=["L001", "L002"]),
+        expand(config["trimmedPath"] +  "/{sample}/{sample}_{lane}R{number}.trimmed.fastq.gz", sample=SAMPLES, lane=["L001", "L002"], number=["1","2"]),
+        expand("{path}/../FASTQC/POST/{sample}/fastqc.done", sample=SAMPLES, path=config["untrimmedPath"]),
+
+rule fastqQCpre:
+    input:
+        read1=expand(config["untrimmedPath"]  + "/{{sample}}_{lane}R1.fastq.gz",  lane=["L001", "L002"]),
+	read2=expand(config["untrimmedPath"] +  "/{{sample}}_{lane}R2.fastq.gz",  lane=["L001", "L002"])
+    output:
+        fastqQCpredone=expand(config["untrimmedPath"]  + "/../FASTQC/PRE/{{sample}}/{{sample}}_{lane}R{number}.fastqc.done" ,  number=["1","2"], lane=["L001", "L002"]),
+        outdir = directory(config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}")
+    shell:
+        "{config[fastqc]} {input.read1} {input.read2} --outdir={output.outdir};"
+	"touch {output.fastqQCpredone}"
+
+
+rule trimmomatic:
+    input:
+        read1=config["untrimmedPath"]  + "/{sample}_{lane}R1.fastq.gz",
+        read2=config["untrimmedPath"] +  "/{sample}_{lane}R2.fastq.gz"
+    output:
+        tpread1= config["trimmedPath"] +  "/{sample}/{sample}_{lane}R1.trimmed.fastq.gz",
+	tpread2= config["trimmedPath"] +  "/{sample}/{sample}_{lane}R2.trimmed.fastq.gz",
+	tpread3= config["trimmedPath"] +  "/{sample}/{sample}_{lane}R3.trimmed.fastq.gz",
+	tmp1=temp(config["trimmedPath"] + "/{sample}/{sample}_{lane}tmp1.fastq.gz"),
+        tmp2=temp(config["trimmedPath"] + "/{sample}/{sample}_{lane}tmp2.fastq.gz"),
+    shell:
+        "java -jar {config[trimmomatic]} PE {input.read1} {input.read2} {output.tpread1} {output.tmp1} \
+	{output.tpread2} {output.tmp2} ILLUMINACLIP:{config[adapters]}:2:30:10:4:keepBothReads LEADING:3 TRAILING:3 MINLEN:36;"
+	"cat {output.tmp1} {output.tmp2} > {output.tpread3};"
+
+
+rule fastqQCpost:
+    input:
+        in1= expand(config["trimmedPath"] +  "/{{sample}}/{{sample}}_{lane}R1.trimmed.fastq.gz",  lane=["L001", "L002"]),
+	in2= expand(config["trimmedPath"] +  "/{{sample}}/{{sample}}_{lane}R2.trimmed.fastq.gz",  lane=["L001", "L002"]),
+	in3= expand(config["trimmedPath"] +  "/{{sample}}/{{sample}}_{lane}R3.trimmed.fastq.gz",  lane=["L001", "L002"]),
+    output:
+        postoutdir=directory(config["untrimmedPath"] + "/../FASTQC/POST/{sample}/"),
+        fastqQCpostdone= config["untrimmedPath"] + "/../FASTQC/POST/{sample}/fastqc.done"
+    shell:
+        "{config[fastqc]} {input.in1} {input.in2} {input.in3}  --outdir={output.postoutdir};"
+	"touch {output.fastqQCpostdone}"
+

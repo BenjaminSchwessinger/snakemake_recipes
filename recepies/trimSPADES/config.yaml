@@ -1,0 +1,20 @@
+###Sample in path
+untrimmedPath : "/scratch/be39/bxs800/fungalgenomes/rawdata"
+
+trimmedPath  : "/scratch/be39/bxs800/fungalgenomes/trimmeddata"
+
+
+###Abspath to components
+fastqc : "/home/800/bxs800/programs/FastQC/fastqc"
+
+trimmomatic : "/home/800/bxs800/programs/Trimmomatic-0.39/trimmomatic-0.39.jar"
+
+adapters : "/home/800/bxs800/programs/Trimmomatic-0.39/adapters/all_adapters.fa"
+
+#Analysis path
+SPADES : "/scratch/be39/bxs800/fungalgenomes/analysis/SPADES"
+
+
+
+
+
