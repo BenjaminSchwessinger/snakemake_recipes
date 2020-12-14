@@ -7,11 +7,17 @@ SAMPLES.sort()
 #SAMPLES = SAMPLES[:3]
 print(SAMPLES)
 
+localrules:
+    Astats
+
 rule all:
     input:
         expand(config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}/{sample}_{lane}R{number}.fastqc.done" , sample=SAMPLES, number=["1","2"], lane=["L001", "L002"]),
         expand(config["trimmedPath"] +  "/{sample}/{sample}_{lane}R{number}.trimmed.fastq.gz", sample=SAMPLES, lane=["L001", "L002"], number=["1","2"]),
         expand("{path}/../FASTQC/POST/{sample}/fastqc.done", sample=SAMPLES, path=config["untrimmedPath"]),
+        #expand(config["spadesPath"] + "/{sample}/assembly/{sample}.fasta", sample=SAMPLES),
+        expand(config["spadesPath"] + "/{sample}/stats/{sample}.short_summary_assembly.txt", sample=SAMPLES),
+        expand(config["spadesPath"] + "/{sample}/stats/{sample}.assemblyStats.txt", sample=SAMPLES)
 
 rule fastqQCpre:
     input:
@@ -53,3 +59,39 @@ rule fastqQCpost:
         "{config[fastqc]} {input.in1} {input.in2} {input.in3}  --outdir={output.postoutdir};"
 	"touch {output.fastqQCpostdone}"
 
+rule SPADES:
+    input:
+        in1= expand(config["trimmedPath"] +  "/{{sample}}/{{sample}}_{lane}R1.trimmed.fastq.gz",  lane=["L001", "L002"]),
+        in2= expand(config["trimmedPath"] +  "/{{sample}}/{{sample}}_{lane}R2.trimmed.fastq.gz",  lane=["L001", "L002"]),
+        in3= expand(config["trimmedPath"] +  "/{{sample}}/{{sample}}_{lane}R3.trimmed.fastq.gz",  lane=["L001", "L002"])
+    output:
+        outdir=directory(config["spadesPath"] + "/{sample}/assembly"),
+        tmpassembly=temp(config["spadesPath"] + "/{sample}/assembly/contigs.fasta"),
+        assembly=config["spadesPath"] + "/{sample}/assembly/{sample}.fasta"
+    shell:
+        "{config[spades]} --isolate -t 28 -o {output.outdir} \
+        --pe1-1 {input.in1}[0] --pe1-2 {input.in2}[0] --pe1-s {input.in3}[0] \
+        --pe1-1 {input.in1}[1] --pe1-2 {input.in2}[1] --pe1-s {input.in3}[1];"
+        "mv {output.tmpassembly} {output.assembly}"
+
+rule Astats:
+    input:
+        assembly=config["spadesPath"] + "/{sample}/assembly/{sample}.fasta"
+    output:
+        outdir=directory(config["spadesPath"] + "/{sample}/stats"),
+        astats=config["spadesPath"] + "/{sample}/stats/{sample}.assemblyStats.txt"
+    shell:
+        "stats.sh {input.assembly} > {output.astats}"
+
+rule BUSCO3:
+    input:
+        assembly=config["spadesPath"] + "/{sample}/assembly/{sample}.fasta"
+    output:
+        outdir=directory(config["spadesPath"] + "/{sample}/BUSCO"),
+        shortsum=config["spadesPath"] + "/{sample}/BUSCO/short_summary_assembly.txt",
+        shortsum2=config["spadesPath"] + "/{sample}/stats/{sample}.short_summary_assembly.txt"
+    shell:
+        "run_BUSCO.py -i {input.assembly} -l config[busconlin] \
+        {output.outdir} -m genome -c 16;"
+        "cp {output.shortsum} {output.shortsum2}"
+     
