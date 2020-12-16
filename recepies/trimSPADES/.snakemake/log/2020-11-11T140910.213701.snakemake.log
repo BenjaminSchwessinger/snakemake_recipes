@@ -1,3 +1,0 @@
-SyntaxError:
-Not all output, log and benchmark files of rule trimmomatic contain the same wildcards. This is crucial though, in order to avoid that two or more jobs write to the same file.
-  File "/home/800/bxs800/scripts/snakemake/recepies/trimSPADES/snakefile", line 42, in <module>

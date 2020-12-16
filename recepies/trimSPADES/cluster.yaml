@@ -20,6 +20,7 @@ fastqQCpost :
  mem: 24G
 
 SPADES :
+ queue: hugemembw
  threads: 28
  time: '30:00:00'
  mem: 270G
