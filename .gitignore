@@ -1,3 +1,5 @@
 */*/data
 */*/gadi
-*/*/.snakemake/*
+*/*/.snakemake
+*/*/*sh.o*
+*/*/*sh.e*

@@ -72,7 +72,7 @@ rule SPADES:
         "{config[spades]} --isolate -t 28 -o {output.outdir} \
         --pe1-1 {input.in1[0]} --pe1-2 {input.in2[0]} --pe1-s {input.in3[0]} \
         --pe1-1 {input.in1[1]} --pe1-2 {input.in2[1]} --pe1-s {input.in3[1]};"
-        "mv {output.tmpassembly} {output.assembly}"
+        "cp {output.tmpassembly} {output.assembly}"
 
 rule Astats:
     input:

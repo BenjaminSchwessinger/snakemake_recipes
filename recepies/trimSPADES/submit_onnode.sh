@@ -1,12 +1,12 @@
 #!/bin/bash
 #PBS -P be39
 #PBS -q normal
-#PBS -l walltime=24:00:00
+#PBS -l walltime=48:00:00
 #PBS -l ncpus=2
 #PBS -l mem=2GB
 #PBS -l jobfs=1GB
 #PBS -l wd
-#PBS -l storage=scratch/xf3
+#PBS -l storage=scratch/xf3+scratch/be39+gdata/be39
 
 source /home/800/bxs800/scripts/snakemake/recepies/trimSPADES/gadimod.sh
 
@@ -20,7 +20,7 @@ export TMPDIR=${PBS_JOBFS:-$TMPDIR}
 TARGET=${TARGET:-all}
 
 QSUB="qsub -q {cluster.queue} -l ncpus={cluster.threads} -l jobfs={cluster.jobfs}"
-QSUB="$QSUB -l walltime={cluster.time} -l mem={cluster.mem} -N {cluster.name} -l storage=scratch/xf3"
+QSUB="$QSUB -l walltime={cluster.time} -l mem={cluster.mem} -N {cluster.name} -l storage=scratch/xf3+scratch/be39+gdata/be39"
 QSUB="$QSUB -l wd -j oe -o $logdir -P {cluster.project}"
 
 snakemake                                                          \
