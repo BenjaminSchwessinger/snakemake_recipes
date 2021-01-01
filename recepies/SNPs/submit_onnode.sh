@@ -1,13 +1,13 @@
 #!/bin/bash
 #PBS -P xf3
 #PBS -q normal
-#PBS -l walltime=24:00:00
+#PBS -l walltime=48:00:00
 #PBS -l ncpus=2
 #PBS -l mem=2GB
 #PBS -l jobfs=1GB
 #PBS -l wd
-#PBS -l storage=scratch/xf3
-source /home/800/bxs800/scripts/snakemake/gadimod.sh
+#PBS -l storage=scratch/xf3+gdata/xf3
+source /home/800/bxs800/scripts/snakemake/recepies/SNPs/gadimod.sh
 
 conda activate snakemake
 
@@ -19,7 +19,7 @@ export TMPDIR=${PBS_JOBFS:-$TMPDIR}
 TARGET=${TARGET:-all}
 
 QSUB="qsub -q {cluster.queue} -l ncpus={cluster.threads} -l jobfs={cluster.jobfs}"
-QSUB="$QSUB -l walltime={cluster.time} -l mem={cluster.mem} -N {cluster.name} -l storage=scratch/xf3"
+QSUB="$QSUB -l walltime={cluster.time} -l mem={cluster.mem} -N {cluster.name} -l storage=scratch/xf3+gdata/xf3"
 QSUB="$QSUB -l wd -j oe -o $logdir -P {cluster.project}"
 
 snakemake                                                          \
@@ -27,8 +27,9 @@ snakemake                                                          \
     --max-jobs-per-second 2                                        \
     --cluster-config cluster.yaml                             \
     --local-cores ${PBS_NCPUS:-1}                                  \
-    --js /home/800/bxs800/scripts/snakemake/jobscript.sh                                         \
+    --js /home/800/bxs800/scripts/snakemake/recepies/SNPs/jobscript.sh                                         \
     --nolock                                                       \
+    --use-conda                                                    \
     --rerun-incomplete                                             \
     --keep-going                                                   \
     --cluster "$QSUB"                                              \

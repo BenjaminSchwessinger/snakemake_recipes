@@ -36,7 +36,7 @@ rule bwa_map:
         bam= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam",
         bai= config["MappedPath"] + "/{sample}/" + config["bwa_refname"]  +".bwa_mem.{sample}.bam.bai",
     shell:
-        "bwa mem -R '{params.rg}' -t {config[bwa_mapT]} {input.ref} {input.tpread1} {input.tpread2} | samtools sort -O BAM -@ {config[bwa_sortT]} -o {output.bam} -;"
+        "bwa-mem2 mem -R '{params.rg}' -t {config[bwa_mapT]} {input.ref} {input.tpread1} {input.tpread2} | samtools sort -O BAM -@ {config[bwa_sortT]} -o {output.bam} -;"
         "samtools index -@ {config[bwa_indexT]} {output.bam}"
 
 
@@ -68,6 +68,8 @@ rule het_QC:
         QCplot= config["MappedPath"] + "/{sample}/{sample}_refHetFreqSpec.png",
     params:
         sample="{sample}"
+    conda:
+        "envs/hetFreqPlot.ymal"    
     shell:
         #"conda activate snakemake;"
         "python3 /home/800/bxs800/scripts/python/hetFreqPlot.py {input.vcffil} {params.sample}" 

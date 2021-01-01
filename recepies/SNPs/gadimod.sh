@@ -8,7 +8,7 @@ function useconda() {
 	                eval "$(/g/data/xf3/bxs800/miniconda3/bin/conda shell.zsh hook)"
 			        }
 useconda
-conda activate SoilCarbon
+conda activate snakemake
 
-module load java
+module load samtools bcftools/1.10.2 bwa java
 

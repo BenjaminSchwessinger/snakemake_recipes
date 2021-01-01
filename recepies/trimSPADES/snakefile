@@ -6,10 +6,13 @@ SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"])
 SAMPLES.sort()
 #SAMPLES = SAMPLES[:3]
 print(SAMPLES)
-
-localrules:
-    Astats
-
+for x in [x for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]:
+    if len(x.split('_')) > 2: 
+        oldFilename = os.path.join(config["untrimmedPath"], x)
+        sample = x.split('_')[0]
+        newFilename = os.path.join(config["untrimmedPath"], sample +'_'+ x.split(sample)[-1])
+        print(oldFilename, newFilename)
+        #os.rename(oldFilename, newFilename)
 rule all:
     input:
         expand(config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}/{sample}_{lane}R{number}.fastqc.done" , sample=SAMPLES, number=["1","2"], lane=["L001", "L002"]),
@@ -87,11 +90,12 @@ rule BUSCO3:
     input:
         assembly=config["spadesPath"] + "/{sample}/assembly/{sample}.fasta"
     output:
-        outdir=directory(config["spadesPath"] + "/{sample}/BUSCO"),
-        shortsum=config["spadesPath"] + "/{sample}/BUSCO/short_summary_assembly.txt",
+        outdir=directory(config["spadesPath"] + "/{sample}/run_BUSCO"),
+        shortsum=config["spadesPath"] + "/{sample}/run_BUSCO/short_summary_BUSCO.txt",
         shortsum2=config["spadesPath"] + "/{sample}/stats/{sample}.short_summary_assembly.txt"
     shell:
-        "run_BUSCO.py -i {input.assembly} -l config[busconlin] \
-        {output.outdir} -m genome -c 16;"
+        "cd {output.outdir}/..;"
+        "run_BUSCO.py -i {input.assembly} -l {config[busconlin]} \
+        -o BUSCO -m genome -c 16 -f;"
         "cp {output.shortsum} {output.shortsum2}"
      

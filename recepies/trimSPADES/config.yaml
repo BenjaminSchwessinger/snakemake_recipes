@@ -13,7 +13,7 @@ adapters : "/home/800/bxs800/programs/Trimmomatic-0.39/adapters/all_adapters.fa"
 
 spades : "/home/800/bxs800/myapps/SPADES/3.14.1/SPAdes-3.14.1-Linux/bin/spades.py"
 
-buscolin: "/g/data/be39/bxs800/db/busco/ascomycota_odb9"
+busconlin: "/g/data/be39/bxs800/db/busco/ascomycota_odb9"
 
 #Analysis path
 spadesPath : "/scratch/be39/bxs800/fungalgenomes/analysis/SPADES"

@@ -1,0 +1,14 @@
+ERROR	Impossible to read /scratch/be39/bxs800/fungalgenomes/analysis/SPADES/DMTRCTR140/assembly/contigs.fasta
+
+======================================================================================
+                  Resource Usage on 2020-12-21 15:10:38:
+   Job Id:             14916574.gadi-pbs
+   Project:            be39
+   Exit Status:        0
+   Service Units:      0.13
+   NCPUs Requested:    16                     NCPUs Used: 16              
+                                           CPU Time Used: 00:00:05                                   
+   Memory Requested:   50.0GB                Memory Used: 204.35MB        
+   Walltime requested: 04:00:00            Walltime Used: 00:00:15        
+   JobFS requested:    1.0GB                  JobFS used: 0B              
+======================================================================================

@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -P xf3
 #PBS -q normal
-#PBS -l walltime=24:00:00
+#PBS -l walltime=48:00:00
 #PBS -l ncpus=2
 #PBS -l mem=2GB
 #PBS -l jobfs=1GB
@@ -20,7 +20,7 @@ export TMPDIR=${PBS_JOBFS:-$TMPDIR}
 TARGET=${TARGET:-all}
 
 QSUB="qsub -q {cluster.queue} -l ncpus={cluster.threads} -l jobfs={cluster.jobfs}"
-QSUB="$QSUB -l walltime={cluster.time} -l mem={cluster.mem} -N {cluster.name} -l storage=scratch/xf3"
+QSUB="$QSUB -l walltime={cluster.time} -l mem={cluster.mem} -N {cluster.name} -l storage=scratch/xf3+gdata/xf3"
 QSUB="$QSUB -l wd -j oe -o $logdir -P {cluster.project}"
 
 snakemake                                                          \
