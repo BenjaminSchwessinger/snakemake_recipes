@@ -13,6 +13,7 @@ for x in [x for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz
         newFilename = os.path.join(config["untrimmedPath"], sample +'_'+ x.split(sample)[-1])
         print(oldFilename, newFilename)
         #os.rename(oldFilename, newFilename)
+
 rule all:
     input:
         expand(config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}/{sample}_{lane}R{number}.fastqc.done" , sample=SAMPLES, number=["1","2"], lane=["L001", "L002"]),
@@ -83,6 +84,7 @@ rule Astats:
     output:
         outdir=directory(config["spadesPath"] + "/{sample}/stats"),
         astats=config["spadesPath"] + "/{sample}/stats/{sample}.assemblyStats.txt"
+    group: "aanalysis"
     shell:
         "stats.sh {input.assembly} > {output.astats}"
 
@@ -93,6 +95,7 @@ rule BUSCO3:
         outdir=directory(config["spadesPath"] + "/{sample}/run_BUSCO"),
         shortsum=config["spadesPath"] + "/{sample}/run_BUSCO/short_summary_BUSCO.txt",
         shortsum2=config["spadesPath"] + "/{sample}/stats/{sample}.short_summary_assembly.txt"
+    group: "aanalysis"
     shell:
         "cd {output.outdir}/..;"
         "run_BUSCO.py -i {input.assembly} -l {config[busconlin]} \

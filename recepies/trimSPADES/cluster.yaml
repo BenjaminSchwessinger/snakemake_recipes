@@ -23,7 +23,7 @@ SPADES :
  queue: normalbw
  threads: 28
  time: '48:00:00'
- mem: 256G
+ mem: 200G
 
 BUSCO3:
  threads: 16
