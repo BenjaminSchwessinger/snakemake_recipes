@@ -5,6 +5,7 @@ configfile : "config.yaml"
 SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]))
 SAMPLES.sort()
 #SAMPLES = SAMPLES[:3]
+#SAMPLES = ["DMTRCTR4452"]
 print(SAMPLES)
 for x in [x for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]:
     if len(x.split('_')) > 2: 
@@ -73,7 +74,7 @@ rule SPADES:
         tmpassembly=temp(config["spadesPath"] + "/{sample}/assembly/contigs.fasta"),
         assembly=config["spadesPath"] + "/{sample}/assembly/{sample}.fasta"
     shell:
-        "{config[spades]} --isolate -t 28 -o {output.outdir} \
+        "{config[spades]} --isolate -t 48 -o {output.outdir} \
         --pe1-1 {input.in1[0]} --pe1-2 {input.in2[0]} --pe1-s {input.in3[0]} \
         --pe1-1 {input.in1[1]} --pe1-2 {input.in2[1]} --pe1-s {input.in3[1]};"
         "cp {output.tmpassembly} {output.assembly}"
@@ -98,7 +99,8 @@ rule BUSCO3:
     group: "aanalysis"
     shell:
         "cd {output.outdir}/..;"
-        "run_BUSCO.py -i {input.assembly} -l {config[busconlin]} \
+        "run_BUSCO.py \
+         -i {input.assembly} -l {config[busconlin]} \
         -o BUSCO -m genome -c 16 -f;"
         "cp {output.shortsum} {output.shortsum2}"
      

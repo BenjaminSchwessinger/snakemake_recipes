@@ -2,6 +2,7 @@
 
 source /home/800/bxs800/scripts/snakemake/recepies/trimSPADES/gadimod.sh
 
+
 export TMPDIR=$PBS_JOBFS
 
 
