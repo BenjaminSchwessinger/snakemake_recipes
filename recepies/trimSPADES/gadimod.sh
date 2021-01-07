@@ -10,5 +10,7 @@ function useconda() {
 useconda
 conda activate SoilCarbon
 
-module load java
+module load java openmpi/4.0.3
+
+export OMP_NUM_THREADS=16
 
