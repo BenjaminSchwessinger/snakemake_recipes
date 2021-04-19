@@ -1,0 +1,32 @@
+__default__:
+  mem: 12G
+  queue: express
+  time: '01:00:00'
+  jobfs: 1G
+  project: xf3
+  name: "SNK_{rule}"
+  threads: 1
+
+maskGenome :
+  threads: 16
+  mem: 24G
+  time: 24:00:00
+
+funPrep :
+ time : '03:00:00'
+ mem: 10G
+
+funGenPredict :
+ time : '04:00:00'
+ mem : 80G
+ threads : 24
+
+Interpro:
+ time : '05:00:00'
+ mem : 120G
+ threads : 34
+
+funFuncAnno:
+ time : '05:00:00'
+ mem : 120G
+ threads : 24

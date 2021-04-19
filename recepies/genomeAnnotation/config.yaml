@@ -1,0 +1,19 @@
+###Sample in path
+
+assemblyPath  : "/scratch/be39/bxs800/fungalgenomes/analysis/SPADES/assemblies"
+annotationPath : "/scratch/be39/bxs800/fungalgenomes/analysis/genomeAnalysis"
+
+
+###Abspath to components
+RepeatMasker : "/g/data/xf3/bxs800/miniconda3/envs/SoilCarbon/share/RepeatMasker/RepeatMasker"
+RepLib : "/g/data/xf3/bxs800/miniconda3/envs/SoilCarbon/share/RepeatMasker/Libraries/RMRB.fasta"
+InterProScan : "/g/data/xf3/bxs800/programs/interpro/interproscan-5.48-83.0/interproscan.sh"
+
+
+
+
+
+
+
+
+
