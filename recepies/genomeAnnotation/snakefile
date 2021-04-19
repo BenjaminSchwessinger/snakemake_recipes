@@ -45,10 +45,9 @@ rule funGenPredict:
         proteinSeq = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.proteins.fa",
         stats = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.stats.json",
         #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
-        
     run:
         shell('funannotate predict -i {input.sortedGenome} --cpus 24 -o funAnno \
-		--species "{sample}" --busco_seed_species botrytis_cinerea')
+		--species {wildcards.sample} --busco_seed_species botrytis_cinerea')
 
 rule InterPro:
     input:
