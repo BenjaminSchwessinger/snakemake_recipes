@@ -45,8 +45,13 @@ rule funGenPredict:
         proteinSeq = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.proteins.fa",
         stats = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.stats.json",
         #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
+    params:
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno") 
     run:
-        shell('funannotate predict -i {input.sortedGenome} --cpus 24 -o funAnno \
+        #shell('which perl'),
+        #shell('perl -e "print \"@INC\""' ),
+        #shell('perl /g/data/xf3/bxs800/miniconda3/envs/funannotate/opt/evidencemodeler-1.1.1/EvmUtils/misc/augustus_GFF3_to_EVM_GFF3.pl /scratch/be39/bxs800/fungalgenomes/analysis/genomeAnalysis/DMTRCTR4452/GenomeAnnotation/funAnno/predict_misc/genemark.gff'),
+        shell('funannotate predict -i {input.sortedGenome} --cpus 48 -o {params.predictDir} \
 		--species {wildcards.sample} --busco_seed_species botrytis_cinerea')
 
 rule InterPro:
