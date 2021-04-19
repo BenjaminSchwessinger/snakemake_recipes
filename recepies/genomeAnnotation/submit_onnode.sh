@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -P xf3
+#PBS -P be39
 #PBS -q express
 #PBS -l walltime=24:00:00
 #PBS -l ncpus=2

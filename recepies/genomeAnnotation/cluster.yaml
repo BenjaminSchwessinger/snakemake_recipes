@@ -3,7 +3,7 @@ __default__:
   queue: express
   time: '01:00:00'
   jobfs: 1G
-  project: xf3
+  project: be39
   name: "SNK_{rule}"
   threads: 1
 
@@ -19,7 +19,7 @@ funPrep :
 funGenPredict :
  time : '04:00:00'
  mem : 80G
- threads : 24
+ threads : 48
 
 Interpro:
  time : '05:00:00'
