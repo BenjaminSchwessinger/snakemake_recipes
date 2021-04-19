@@ -3,7 +3,7 @@ __default__:
   queue: normal
   time: '01:00:00'
   jobfs: 1G
-  project: be39
+  project: xf3
   name: "SNK_{rule}"
   threads: 1
 
@@ -22,16 +22,17 @@ fastqQCpost :
 SPADES :
  queue: normal
  threads: 16
- time: '30:00:00'
+ time: '20:00:00'
  mem: 190G
 
 BUSCO3:
  threads: 16
- time: '04:00:00'
+ time: '02:00:00'
  mem: 50G
 
 aanalysis:
+ project: xf3 
  threads: 16
- time: '04:00:00'
+ time: '02:00:00'
  mem: 50G
  queue: express

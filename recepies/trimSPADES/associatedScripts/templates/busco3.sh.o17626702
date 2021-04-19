@@ -1,0 +1,13 @@
+
+======================================================================================
+                  Resource Usage on 2021-02-16 14:37:40:
+   Job Id:             17626702.gadi-pbs
+   Project:            be39
+   Exit Status:        127
+   Service Units:      0.01
+   NCPUs Requested:    16                     NCPUs Used: 16              
+                                           CPU Time Used: 00:00:00                                   
+   Memory Requested:   50.0GB                Memory Used: 9.06MB          
+   Walltime requested: 04:00:00            Walltime Used: 00:00:01        
+   JobFS requested:    1.0GB                  JobFS used: 0B              
+======================================================================================

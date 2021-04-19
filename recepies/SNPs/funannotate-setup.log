@@ -1,0 +1,148 @@
+[01/01/21 21:00:57]: /g/data/xf3/bxs800/miniconda3/envs/funannotate/bin/funannotate setup -i all
+
+[01/01/21 21:00:57]: OS: linux2, 48 cores, ~ 262 GB RAM. Python: 2.7.18
+[01/01/21 21:00:57]: Running 1.8.2
+[01/01/21 21:00:57]: Database location: /g/data/xf3/bxs800/databases/funannotate
+[01/01/21 21:00:57]: Retrieving download links from GitHub Repo
+[01/01/21 21:00:58]: Parsing Augustus pre-trained species and porting to funannotate
+[01/01/21 21:04:30]: Downloading Merops database
+[01/01/21 21:04:32]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/merops/current_release/merops_scan.lib Bytes: 1957603
+[01/01/21 21:04:39]: Building diamond database
+[01/01/21 21:04:39]: diamond makedb --in merops.formatted.fa --db merops
+[01/01/21 21:04:39]: diamond v2.0.6.144 (C) Max Planck Society for the Advancement of Science
+Documentation, support and updates available at http://www.diamondsearch.org
+
+#CPU threads: 48
+Scoring parameters: (Matrix=BLOSUM62 Lambda=0.267 K=0.041 Penalties=11/1)
+Database input file: merops.formatted.fa
+Opening the database file...  [0.089s]
+Loading sequences...  [0.011s]
+Masking sequences...  [0.019s]
+Writing sequences...  [0.001s]
+Hashing sequences...  [0.001s]
+Loading sequences...  [0s]
+Writing trailer...  [0s]
+Closing the input file...  [0s]
+Closing the database file...  [0.073s]
+Database hash = d7da5f19e2e6398e9f4d95ec5ea3f1e9
+Processed 5009 sequences, 1276807 letters.
+Total time = 0.197s
+
+[01/01/21 21:04:39]: MEROPS Database: version=12.0 date=2017-10-04 records=5,009
+[01/01/21 21:04:39]: Downloading UniProtKB/SwissProt database
+[01/01/21 21:04:42]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz Bytes: 89772962
+[01/01/21 21:10:41]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/uniprot/current_release/knowledgebase/complete/reldate.txt Bytes: 151
+[01/01/21 21:10:41]: Building diamond database
+[01/01/21 21:10:41]: diamond makedb --in uniprot_sprot.fasta --db uniprot
+[01/01/21 21:10:44]: diamond v2.0.6.144 (C) Max Planck Society for the Advancement of Science
+Documentation, support and updates available at http://www.diamondsearch.org
+
+#CPU threads: 48
+Scoring parameters: (Matrix=BLOSUM62 Lambda=0.267 K=0.041 Penalties=11/1)
+Database input file: uniprot_sprot.fasta
+Opening the database file...  [0.394s]
+Loading sequences...  [1.362s]
+Masking sequences...  [0.355s]
+Writing sequences...  [0.371s]
+Hashing sequences...  [0.067s]
+Loading sequences...  [0s]
+Writing trailer...  [0.002s]
+Closing the input file...  [0.003s]
+Closing the database file...  [0.014s]
+Database hash = 59923dcfc162124c8be4ceaba8213798
+Processed 563972 sequences, 203185243 letters.
+Total time = 2.572s
+
+[01/01/21 21:10:46]: UniProtKB Database: version=2020_06 date=2020-12-02 records=563,972
+[01/01/21 21:10:46]: Downloading dbCAN database
+[01/01/21 21:10:47]: Downloading: http://bcb.unl.edu/dbCAN2/download/Databases/dbCAN-HMMdb-V8.txt Bytes: 94320446
+[01/01/21 21:10:55]: Downloading: http://bcb.unl.edu/dbCAN2/download/Databases/CAZyDB.07312019.fam-activities.txt Bytes: 63496
+[01/01/21 21:10:56]: Downloading: http://bcb.unl.edu/dbCAN2/download/Databases/dbCAN-old@UGA/readme.txt Bytes: 7507
+[01/01/21 21:15:57]: Creating dbCAN HMM database
+[01/01/21 21:15:57]: hmmpress -f dbCAN.hmm
+[01/01/21 21:17:32]: Working...    done.
+Pressed and indexed 641 HMMs (641 names and 9 accessions).
+Models pressed into binary file:   dbCAN.hmm.h3m
+SSI index for binary model file:   dbCAN.hmm.h3i
+Profiles (MSV part) pressed into:  dbCAN.hmm.h3f
+Profiles (remainder) pressed into: dbCAN.hmm.h3p
+
+[01/01/21 21:17:32]: dbCAN Database: version=9.0 date=2020-08-04 records=641
+[01/01/21 21:17:32]: Downloading Pfam database
+[01/01/21 21:17:34]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz Bytes: 274119400
+[01/01/21 21:18:18]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.clans.tsv.gz Bytes: 335058
+[01/01/21 21:18:21]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam.version.gz Bytes: 116
+[01/01/21 21:18:31]: Creating Pfam HMM database
+[01/01/21 21:18:31]: hmmpress -f Pfam-A.hmm
+[01/01/21 21:46:43]: Working...    done.
+Pressed and indexed 18259 HMMs (18259 names and 18259 accessions).
+Models pressed into binary file:   Pfam-A.hmm.h3m
+SSI index for binary model file:   Pfam-A.hmm.h3i
+Profiles (MSV part) pressed into:  Pfam-A.hmm.h3f
+Profiles (remainder) pressed into: Pfam-A.hmm.h3p
+
+[01/01/21 21:46:43]: Pfam Database: version=33.1 date=2020-04 records=18,259
+[01/01/21 21:46:43]: Downloading Repeat database
+[01/01/21 21:46:46]: Downloading: https://osf.io/vp87c/download?version=1 Bytes: 6325661
+[01/01/21 21:47:04]: Building diamond database
+[01/01/21 21:47:04]: diamond makedb --in funannotate.repeats.reformat.fa --db repeats -parse_seqids
+[01/01/21 21:47:07]: diamond v2.0.6.144 (C) Max Planck Society for the Advancement of Science
+Documentation, support and updates available at http://www.diamondsearch.org
+
+#CPU threads: 48
+Scoring parameters: (Matrix=BLOSUM62 Lambda=0.267 K=0.041 Penalties=11/1)
+Database input file: funannotate.repeats.reformat.fa
+Opening the database file...  [2.214s]
+Loading sequences...  [0.053s]
+Masking sequences...  [0.061s]
+Writing sequences...  [0.005s]
+Hashing sequences...  [0.002s]
+Loading sequences...  [0s]
+Writing trailer...  [0s]
+Closing the input file...  [0s]
+Closing the database file...  [0.076s]
+Database hash = 448764dca1ff18a6fc151ac6d58d1cc9
+Processed 11950 sequences, 9920808 letters.
+Total time = 2.415s
+
+[01/01/21 21:47:07]: Repeat Database: version=1.0 date=2021-01-01 records=11,950
+[01/01/21 21:47:07]: Downloading GO Ontology database
+[01/01/21 21:47:09]: Downloading: http://purl.obolibrary.org/obo/go.obo Bytes: 33762076
+[01/01/21 21:47:13]: GO ontology version=2020-12-08 date=2020-12-08 records=47,210
+[01/01/21 21:47:13]: Downloading MiBIG Secondary Metabolism database
+[01/01/21 21:47:15]: Downloading: https://dl.secondarymetabolites.org/mibig/mibig_prot_seqs_1.4.fasta Bytes: 21244378
+[01/01/21 21:47:20]: Building diamond database
+[01/01/21 21:47:20]: diamond makedb --in mibig.fa --db mibig
+[01/01/21 21:47:21]: diamond v2.0.6.144 (C) Max Planck Society for the Advancement of Science
+Documentation, support and updates available at http://www.diamondsearch.org
+
+#CPU threads: 48
+Scoring parameters: (Matrix=BLOSUM62 Lambda=0.267 K=0.041 Penalties=11/1)
+Database input file: mibig.fa
+Opening the database file...  [0.405s]
+Loading sequences...  [0.133s]
+Masking sequences...  [0.073s]
+Writing sequences...  [0.013s]
+Hashing sequences...  [0.005s]
+Loading sequences...  [0s]
+Writing trailer...  [0s]
+Closing the input file...  [0.001s]
+Closing the database file...  [0.093s]
+Database hash = 4353c282cd0f9e38827f42bca6312bde
+Processed 31023 sequences, 18898150 letters.
+Total time = 0.738s
+
+[01/01/21 21:47:21]: MiBIG Database: version=1.4 date=2021-01-01 records=31,023
+[01/01/21 21:47:21]: Downloading InterProScan Mapping file
+[01/01/21 21:47:23]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/interpro/interpro.xml.gz Bytes: 30766805
+[01/01/21 21:47:33]: Downloading: ftp://ftp.ebi.ac.uk/pub/databases/interpro/entry.list Bytes: 2069200
+[01/01/21 21:47:54]: InterProScan XML: version=83.0 date=2020-12-03 records=38,345
+[01/01/21 21:47:54]: Downloading pre-computed BUSCO outgroups
+[01/01/21 21:47:56]: Downloading: https://osf.io/r9sne/download?version=1 Bytes: 2374032
+[01/01/21 21:48:09]: BUSCO outgroups: version=1.0 date=2021-01-01 records=8
+[01/01/21 21:48:09]: Downloaded curated gene names and product descriptions
+[01/01/21 21:48:11]: Downloading: https://raw.githubusercontent.com/nextgenusfs/gene2product/master/ncbi_cleaned_gene_products.txt Bytes: 1348857
+[01/01/21 21:48:16]: Gene2Product: version=1.65 date=2020-10-05 records=33,749
+[01/01/21 21:48:16]: Downloading busco models: dikarya
+[01/01/21 21:48:17]: Downloading: https://osf.io/av6f8/download?version=1 Bytes: 66199252
+[01/01/21 21:52:00]: tar -zxf dikarya.tar.gz

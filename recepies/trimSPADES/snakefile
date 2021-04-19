@@ -5,15 +5,17 @@ configfile : "config.yaml"
 SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]))
 SAMPLES.sort()
 #SAMPLES = SAMPLES[:3]
-SAMPLES = ["DMTRCTR1280"]
+#SAMPLES = ["DMTRCTR3569"]
+#SAMPLES.remove("DMTRCTR3835")
 print(SAMPLES)
 for x in [x for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]:
     if len(x.split('_')) > 2: 
         oldFilename = os.path.join(config["untrimmedPath"], x)
         sample = x.split('_')[0]
-        newFilename = os.path.join(config["untrimmedPath"], sample +'_'+ x.split(sample)[-1])
+        newFilename = os.path.join(config["untrimmedPath"], sample +'_'+ x.split('_')[-2] +x.split('_')[-1])
+        #newFilename = os.path.join(config["untrimmedPath"], sample +'_'+ x.split(sample)[-1])
         print(oldFilename, newFilename)
-        #os.rename(oldFilename, newFilename)
+        os.rename(oldFilename, newFilename)
 
 rule all:
     input:
