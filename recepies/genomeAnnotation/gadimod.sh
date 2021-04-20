@@ -10,5 +10,7 @@ function useconda() {
 useconda
 conda activate funannotate
 
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
 export OMP_NUM_THREADS=32
 
