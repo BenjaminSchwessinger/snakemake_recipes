@@ -10,7 +10,7 @@
 
 source /home/800/bxs800/scripts/snakemake/recepies/genomeAnnotation/gadimod.sh
 
-conda activate snakemake
+conda activate funannotate
 
 set -ueo pipefail
 logdir=gadi/log
@@ -21,7 +21,7 @@ TARGET=${TARGET:-all}
 
 QSUB="qsub -q {cluster.queue} -l ncpus={cluster.threads} -l jobfs={cluster.jobfs}"
 QSUB="$QSUB -l walltime={cluster.time} -l mem={cluster.mem} -N {cluster.name} -l storage=scratch/xf3+scratch/be39+gdata/be39+gdata/xf3"
-QSUB="$QSUB -l wd -j oe -o $logdir -P {cluster.project}"
+QSUB="$QSUB -l wd -j oe -o $logdir -P {cluster.project} -V"
 
 snakemake                                                          \
     -j 1000                                                        \
