@@ -23,8 +23,8 @@ funGenPredict :
 
 Interpro:
  time : '05:00:00'
- mem : 120G
- threads : 34
+ mem : 150G
+ threads : 48
 
 funFuncAnno:
  time : '05:00:00'
