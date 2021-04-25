@@ -6,10 +6,11 @@
 #PBS -l mem=2GB
 #PBS -l jobfs=1GB
 #PBS -l wd
-#PBS -l storage=scratch/xf3
+#PBS -l storage=scratch/xf3+gdata/xf3
 
 source /home/800/bxs800/scripts/snakemake/recepies/RNAseqTrinity/gadimod.sh
 
+useconda
 conda activate snakemake
 
 set -ueo pipefail
