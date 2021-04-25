@@ -5,9 +5,9 @@ configfile : "config.yaml"
 SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"]) if x.endswith('fq.gz')]))
 SAMPLES.sort()
 #SAMPLES = SAMPLES[:3]
-TREATMENTS = list(set([x[:2] for x in SAMPLES]))
+TREATMENTS = list(set([('-'.join(x.split('-')[:2])[:-1]) for x in SAMPLES]))
 TREATMENTS.sort()
-REPS = list(set([x[2] for x in SAMPLES]))
+REPS = [1, 2, 3]
 REPS.sort()
 print(SAMPLES)
 print(TREATMENTS)
@@ -78,7 +78,7 @@ rule hisat2A:
     output:
         bam=config["hisat2"] + "/{sample}/" + config["hisat2_ref"][0] + ".{sample}.sorted.bam",
     wildcard_constraints:
-        sample=".{2}"
+        sample=".{8}"
     shell:
         "hisat2 --max-intronlen 3000 --threads {config[hisat2_mapT]} -x {config[hisat2_refPATH][0]} --dta \
 	-1 {params.in1} -2 {params.in2} --no-unal | samtools sort -O BAM -@ {config[hisat2_sortT]} -o {output.bam} -;"
@@ -92,7 +92,7 @@ rule trinityA:
     params:
         outdir=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/"
     wildcard_constraints:
-        sample=".{2}"
+        sample=".{8}"
     shell:
         "Trinity --jaccard_clip --max_memory 60G \
           --genome_guided_bam {input.bam} \
@@ -102,7 +102,7 @@ rule fixTrinityNames:
     input:
         trinityfa=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fasta"
     output:
-       trinityFixfa=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fix.fasta"
+        trinityFixfa=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/Trinity-GG.fix.fasta"
     shell:
        "sed 's/GG/{wildcards.sample}/' {input.trinityfa} > {output.trinityFixfa};"
 
