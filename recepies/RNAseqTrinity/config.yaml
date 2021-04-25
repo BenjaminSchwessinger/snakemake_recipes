@@ -1,7 +1,7 @@
 ###Sample in path
-untrimmedPath : "/scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/untrimmed"
+untrimmedPath : "/scratch/xf3/bxs800/data/PenX/RNAseq/untrimmed"
 
-trimmedPath  : "/scratch/xf3/bxs800/data/Pst198E16_v1/RNAseq/trimmed"
+trimmedPath  : "/scratch/xf3/bxs800/data/PenX/RNAseq/trimmed"
 
 
 ###Abspath to components
