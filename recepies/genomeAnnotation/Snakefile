@@ -42,7 +42,7 @@ rule funPrep:
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/")
     run:
         shell("mkdir -p {params.predictDir}"),
-        shell("funannotate clean -i {input.maskedGenome} -o {output.cleanedGenome} --pident 80"),
+        shell("funannotate clean -i {input.maskedGenome} -o {output.cleanedGenome} --pident 80 --minlen 1000" ),
         shell("funannotate sort -i {output.cleanedGenome} -o {output.sortedGenome}") 
 
 rule funGenPredict:
