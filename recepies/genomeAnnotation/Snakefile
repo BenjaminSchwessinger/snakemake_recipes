@@ -4,7 +4,7 @@ configfile : "config.yaml"
 
 SAMPLES = list(set([x.split('.')[0] for x in os.listdir(config["assemblyPath"]) if x.endswith('.fasta')]))
 SAMPLES.sort()
-print(SAMPLES)
+#print(SAMPLES)
 
 #for testing purposes
 SAMPLES = ["DMTRCTR1773", "DMTRCTR2332", "DMTRCTR2358"]
@@ -17,7 +17,7 @@ rule all:
         expand(config["annotationPath"] + "/{sample}/GenomeAnnotation/funAnno/annotate_results/{sample}.annotations.txt", sample=SAMPLES),
         expand(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/antismash/antismash.done", sample=SAMPLES)
 
-
+workdir: config["annotationPath"] + "/working"
 
 rule maskGenome:
     input:
