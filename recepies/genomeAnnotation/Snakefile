@@ -28,7 +28,7 @@ rule maskGenome:
     params:
         outdir=directory(config["annotationPath"]  + "/{sample}/RepeatMasking/RepeatMasker")
     run:
-        shell("{config[RepeatMasker]} -pa 16 -s -gff -lib {config[RepLib]} -dir {params.outdir} -xsmall {input.genome}")
+        shell("{config[RepeatMasker]} -pa 48 -s -gff -lib {config[RepLib]} -dir {params.outdir} -xsmall {input.genome}")
 
 
 rule funPrep:

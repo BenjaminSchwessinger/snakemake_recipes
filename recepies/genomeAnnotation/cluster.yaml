@@ -8,9 +8,9 @@ __default__:
   threads: 1
 
 maskGenome :
-  threads: 16
-  mem: 24G
-  time: 24:00:00
+  threads: 48
+  mem: 50G
+  time: 12:00:00
 
 funPrep :
  time : '03:00:00'
