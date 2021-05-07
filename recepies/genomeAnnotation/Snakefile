@@ -7,8 +7,8 @@ SAMPLES.sort()
 #print(SAMPLES)
 
 #for testing purposes
-SAMPLES = ["DMTRCTR1773", "DMTRCTR2332", "DMTRCTR2358"]
-#SAMPLES = ["DMTRCTR1303"]
+#SAMPLES = ["DMTRCTR1773", "DMTRCTR2332", "DMTRCTR2358"]
+SAMPLES = ["DMTRCTR7040"]
 
 
 
@@ -28,7 +28,7 @@ rule maskGenome:
     params:
         outdir=directory(config["annotationPath"]  + "/{sample}/RepeatMasking/RepeatMasker")
     run:
-        shell("{config[RepeatMasker]} -pa 48 -s -gff -lib {config[RepLib]} -dir {params.outdir} -xsmall {input.genome}")
+        shell("{config[RepeatMasker]} -pa 12 -s -gff -lib {config[RepLib]} -dir {params.outdir} -xsmall {input.genome}")
 
 
 rule funPrep:
@@ -36,11 +36,12 @@ rule funPrep:
         maskedGenome=config["annotationPath"]  + "/{sample}/RepeatMasking/RepeatMasker/{sample}.fasta.masked" 
     output:
         cleanedGenome = config["annotationPath"]  + "/{sample}/GenomeAnnotation/{sample}.masked.cleaned.fasta",
-        sortedGenome = config["annotationPath"]  + "/{sample}/GenomeAnnotation/{sample}.masked.cleaned.sorted.fasta"
+        sortedGenome = config["annotationPath"]  + "/{sample}/GenomeAnnotation/{sample}.masked.cleaned.sorted.fasta",
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation")
     params:
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/")
     run:
-        shell("cd {params.predictDir}"),
+        shell("mkdir -p {params.predictDir}"),
         shell("funannotate clean -i {input.maskedGenome} -o {output.cleanedGenome} --pident 80"),
         shell("funannotate sort -i {output.cleanedGenome} -o {output.sortedGenome}") 
 
@@ -64,11 +65,13 @@ rule InterPro:
         #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno"),
         proteinSeq = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.proteins.fa"
     output:
-        interproXML = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc/iprscan.xml"
+        interproXML = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc/iprscan.xml",
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc")
     params:
         interpro = " -f XML -cpu 44 -dp -goterms -pa",
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
     run:
+        shell("mkdir {output.predictDir}"),
         shell("{config[InterProScan]} {params.interpro} -T {params.predictDir}/itmp -o {output.interproXML} -i {input.proteinSeq}"),
         shell("rm -r {params.predictDir}/itmp")
 
