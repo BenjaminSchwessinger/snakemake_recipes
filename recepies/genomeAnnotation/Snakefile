@@ -2,20 +2,21 @@ import os
 configfile : "config.yaml"
 
 
-SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["assemblyPath"]) if x.endswith('.fasta')]))
+SAMPLES = list(set([x.split('.')[0] for x in os.listdir(config["assemblyPath"]) if x.endswith('.fasta')]))
 SAMPLES.sort()
 print(SAMPLES)
 
 #for testing purposes
-SAMPLES = ["DMTRCTR4452"]
+SAMPLES = ["DMTRCTR1773", "DMTRCTR2332", "DMTRCTR2358"]
+#SAMPLES = ["DMTRCTR1303"]
+
 
 
 rule all:
     input:
-       #expand(config["annotationPath"]  + "/{sample}/RepeatMasking/RepeatMasker/{sample}.fasta.masked", sample=SAMPLES),
-       #expand(config["annotationPath"]  + "/{sample}/GenomeAnnotation/{sample}.masked.cleaned.sorted.fasta", sample=SAMPLES),
-       #expand(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.stats.json", sample=SAMPLES ),
-        expand(config["annotationPath"] + "/{sample}/GenomeAnnotation/funAnno/annotate_results/{sample}.annotations.txt", sample=SAMPLES)
+        expand(config["annotationPath"] + "/{sample}/GenomeAnnotation/funAnno/annotate_results/{sample}.annotations.txt", sample=SAMPLES),
+        expand(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/antismash/antismash.done", sample=SAMPLES)
+
 
 
 rule maskGenome:
@@ -36,7 +37,10 @@ rule funPrep:
     output:
         cleanedGenome = config["annotationPath"]  + "/{sample}/GenomeAnnotation/{sample}.masked.cleaned.fasta",
         sortedGenome = config["annotationPath"]  + "/{sample}/GenomeAnnotation/{sample}.masked.cleaned.sorted.fasta"
+    params:
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/")
     run:
+        shell("cd {params.predictDir}"),
         shell("funannotate clean -i {input.maskedGenome} -o {output.cleanedGenome} --pident 80"),
         shell("funannotate sort -i {output.cleanedGenome} -o {output.sortedGenome}") 
 
@@ -46,7 +50,7 @@ rule funGenPredict:
     output:
         proteinSeq = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.proteins.fa",
         stats = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.stats.json",
-        #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
+        gff3 = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.gff3" 
     params:
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
     run:
@@ -74,10 +78,23 @@ rule funFuncAnno:
         #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
     output:
         funAnnotation = config["annotationPath"] + "/{sample}/GenomeAnnotation/funAnno/annotate_results/{sample}.annotations.txt"
+    params:
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
     run:
-        shell("funannotate annotate --cpus 24 -i {InterPro.params.predictDir}")
+        shell("funannotate annotate --cpus 24 -i {params.predictDir}")
 
-
+rule Antismash:
+    input:
+        gff3 = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.gff3",
+        sortedGenome = config["annotationPath"]  + "/{sample}/GenomeAnnotation/{sample}.masked.cleaned.sorted.fasta"
+    output:
+        antismashDone = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/antismash/antismash.done"
+    params:
+        antismashDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/antismash"),
+        antismashParam = "--taxon fungi --fullhmmer -c 30 --pfam2go --asf --cassis --cb-general --genefinding-tool none --output-dir "+ config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/antismash --genefinding-gff3 "
+    run:
+        shell("antismash {params.antismashParam} {input.gff3} {input.sortedGenome}"),
+        shell("touch {output.antismashDone}")
          
 ####Old below#############
 

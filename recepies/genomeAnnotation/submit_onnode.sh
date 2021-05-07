@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -P be39
-#PBS -q express
-#PBS -l walltime=24:00:00
+#PBS -q normal
+#PBS -l walltime=48:00:00
 #PBS -l ncpus=2
 #PBS -l mem=2GB
 #PBS -l jobfs=1GB

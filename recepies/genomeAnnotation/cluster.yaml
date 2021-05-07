@@ -1,8 +1,8 @@
 __default__:
   mem: 12G
-  queue: express
+  queue: normal
   time: '01:00:00'
-  jobfs: 1G
+  jobfs: 80G
   project: be39
   name: "SNK_{rule}"
   threads: 1
@@ -15,18 +15,29 @@ maskGenome :
 funPrep :
  time : '03:00:00'
  mem: 10G
+ threads: 4
+ jobfs: 80G 
 
 funGenPredict :
  time : '04:00:00'
  mem : 80G
  threads : 48
+ jobfs: 80G 
 
-Interpro:
+InterPro:
  time : '05:00:00'
  mem : 150G
  threads : 48
+ jobfs: 80G 
 
 funFuncAnno:
  time : '05:00:00'
  mem : 120G
  threads : 24
+ jobfs: 80G 
+
+Antismash:
+ time : '05:00:00'
+ mem : 60G
+ threads : 32
+ jobfs: 80G 
