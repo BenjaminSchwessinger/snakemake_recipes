@@ -4,7 +4,7 @@
 #PBS -l walltime=48:00:00
 #PBS -l ncpus=2
 #PBS -l mem=2GB
-#PBS -l jobfs=1GB
+#PBS -l jobfs=80GB
 #PBS -l wd
 #PBS -l storage=scratch/xf3+scratch/be39+gdata/be39+gdata/xf3
 
@@ -13,6 +13,13 @@ source /home/800/bxs800/scripts/snakemake/recepies/genomeAnnotation/gadimod.sh
 conda activate funannotate
 
 set -ueo pipefail
+
+
+#add the move to the node to it
+now=$(pwd)
+cp -r * $PBS_JOBFS
+cd $PBS_JOBFS
+
 logdir=gadi/log
 mkdir -p $logdir
 mkdir -p data/log/
@@ -35,3 +42,4 @@ snakemake                                                          \
     --cluster "$QSUB"                                              \
     "$TARGET"                                                      
 
+cp -r * ${now}/
