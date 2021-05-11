@@ -7,8 +7,8 @@ SAMPLES.sort()
 #print(SAMPLES)
 
 #for testing purposes
-SAMPLES = ["DMTRCTR1773", "DMTRCTR2332", "DMTRCTR2358"]
-#SAMPLES = ["DMTRCTR7040"]
+#SAMPLES = ["DMTRCTR1773", "DMTRCTR2332"]
+SAMPLES = ["DMTRCTR2332"]
 
 
 
@@ -53,27 +53,32 @@ rule funGenPredict:
         stats = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.stats.json",
         gff3 = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.gff3" 
     params:
-        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
+        tmpPredictdir = directory("$PBS_JOBFS/funAnno"),
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno"),
+        tmpSortedGenome = directory("$PBS_JOBFS/genome.fasta")
     run:
-        #shell('which perl'),
-        #shell('perl -e "print \"@INC\""' ),
-        shell('funannotate predict -i {input.sortedGenome} --cpus 48 -o {params.predictDir} \
-		--species {wildcards.sample} --busco_seed_species botrytis_cinerea')
+        shell('cp {input.sortedGenome} {params.tmpSortedGenome}'),
+        shell('funannotate predict -i {params.tmpSortedGenome} --cpus 48 -o {params.tmpPredictdir} \
+		--species {wildcards.sample} --busco_seed_species botrytis_cinerea'),
+        shell('mkdir -p {params.predictDir}'),
+        shell('cp -r {params.tmpPredictdir} {params.predictDir}/../.')
 
 rule InterPro:
     input:
         #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno"),
         proteinSeq = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.proteins.fa"
     output:
-        interproXML = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc/iprscan.xml",
-        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc")
+        interproXML = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc/iprscan.xml"
     params:
-        interpro = " -f XML -cpu 44 -dp -goterms -pa",
-        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
+        interpro = " -f XML -cpu 40 -dp -goterms -pa",
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc"),
+        #tmpDir = directory("$PBS_JOBFS/tmp")
+        tmpDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/IPRStmp")
     run:
-        shell("mkdir -p {output.predictDir}"),
-        shell("{config[InterProScan]} {params.interpro} -T {params.predictDir}/itmp -o {output.interproXML} -i {input.proteinSeq}"),
-        shell("rm -r {params.predictDir}/itmp")
+        shell("mkdir -p {params.predictDir}"),
+        shell("mkdir -p {params.tmpDir}"),
+        shell("{config[InterProScan]} {params.interpro} -T {params.tmpDir} -o {output.interproXML} -i {input.proteinSeq}"),
+        shell("rm -rf {params.tmpDir}")
 
 rule funFuncAnno:
     input:

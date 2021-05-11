@@ -16,9 +16,9 @@ set -ueo pipefail
 
 
 #add the move to the node to it
-now=$(pwd)
-cp -r * $PBS_JOBFS
-cd $PBS_JOBFS
+#now=$(pwd)
+#cp -r * $PBS_JOBFS
+#cd $PBS_JOBFS
 
 logdir=gadi/log
 mkdir -p $logdir
@@ -42,4 +42,4 @@ snakemake                                                          \
     --cluster "$QSUB"                                              \
     "$TARGET"                                                      
 
-cp -r * ${now}/
+#cp -r * ${now}/

@@ -13,9 +13,5 @@ export TMPDIR=$PBS_JOBFS
 #export TMP=$PBS_JOBFS
 export OMP_NUM_THREADS=32
 
-
-
-cd $PBS_JOBFS
-
 set -ueo pipefail
 {exec_job}
