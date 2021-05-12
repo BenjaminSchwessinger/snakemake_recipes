@@ -8,7 +8,7 @@ SAMPLES.sort()
 
 #for testing purposes
 #SAMPLES = ["DMTRCTR1773", "DMTRCTR2332"]
-SAMPLES = ["DMTRCTR2332"]
+#SAMPLES = ["DMTRCTR1286", "DMTRCTR140", "DMTRCTR2332","DMTRCTR2990", "DMTRCTR3374",  "DMTRCTR3816",  "DMTRCTR4452", "DMTRCTR6525", "DMTRCTR7788" ]
 
 
 
@@ -42,7 +42,7 @@ rule funPrep:
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation")
     run:
         shell("mkdir -p {params.predictDir}"),
-        shell("funannotate clean --cpus 6 -i {input.maskedGenome} -o {output.cleanedGenome} --pident 80" ),
+        shell("funannotate clean --cpus 10 -i {input.maskedGenome} -o {output.cleanedGenome} --pident 80" ),
         shell("funannotate sort --minlen 1000 -i {output.cleanedGenome} -o {output.sortedGenome}") 
 
 rule funGenPredict:
