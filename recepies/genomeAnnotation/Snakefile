@@ -7,7 +7,7 @@ SAMPLES.sort()
 #print(SAMPLES)
 
 #for testing purposes
-#SAMPLES = ["DMTRCTR1773", "DMTRCTR2332"]
+SAMPLES = ["DMTRCTR1303"]
 #SAMPLES = ["DMTRCTR1286", "DMTRCTR140", "DMTRCTR2332","DMTRCTR2990", "DMTRCTR3374",  "DMTRCTR3816",  "DMTRCTR4452", "DMTRCTR6525", "DMTRCTR7788" ]
 
 
@@ -61,7 +61,8 @@ rule funGenPredict:
         shell('funannotate predict -i {params.tmpSortedGenome} --cpus 48 -o {params.tmpPredictdir} \
 		--species {wildcards.sample} --busco_seed_species botrytis_cinerea'),
         shell('mkdir -p {params.predictDir}'),
-        shell('cp -r {params.tmpPredictdir} {params.predictDir}/../.')
+        shell('cp -r {params.tmpPredictdir} {params.predictDir}/../.'),
+        shell('rm -rf {params.predictDir}/predict_misc')
 
 rule InterPro:
     input:
@@ -77,7 +78,8 @@ rule InterPro:
     run:
         shell("mkdir -p {params.predictDir}"),
         shell("mkdir -p {params.tmpDir}"),
-        shell("{config[InterProScan]} {params.interpro} -T {params.tmpDir} -o {output.interproXML} -i {input.proteinSeq}"),
+        shell("funannotate iprscan --iprscan_path {config[InterProScan]} -m local --cpus 11 -i {input.proteinSeq} -o {output.interproXML}")
+        #shell("{config[InterProScan]} {params.interpro} -T {params.tmpDir} -o {output.interproXML} -i {input.proteinSeq}"),
         shell("rm -rf {params.tmpDir}")
 
 rule funFuncAnno:
