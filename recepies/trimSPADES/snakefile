@@ -4,9 +4,8 @@ configfile : "config.yaml"
 
 SAMPLES = list(set([x.split('_')[0] for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]))
 SAMPLES.sort()
-#SAMPLES = SAMPLES[:3]
-#SAMPLES = ["DMTRCTR3569"]
-#SAMPLES.remove("DMTRCTR3835")
+#list of samples can be overwritten for testing.
+SAMPLES = ["396", "R9320"]
 print(SAMPLES)
 for x in [x for x in os.listdir(config["untrimmedPath"]) if x.endswith('fastq.gz')]:
     if len(x.split('_')) > 2: 
@@ -22,7 +21,6 @@ rule all:
         expand(config["untrimmedPath"]  + "/../FASTQC/PRE/{sample}/{sample}_{lane}R{number}.fastqc.done" , sample=SAMPLES, number=["1","2"], lane=["L001", "L002"]),
         expand(config["trimmedPath"] +  "/{sample}/{sample}_{lane}R{number}.trimmed.fastq.gz", sample=SAMPLES, lane=["L001", "L002"], number=["1","2"]),
         expand("{path}/../FASTQC/POST/{sample}/fastqc.done", sample=SAMPLES, path=config["untrimmedPath"]),
-        #expand(config["spadesPath"] + "/{sample}/assembly/{sample}.fasta", sample=SAMPLES),
         expand(config["spadesPath"] + "/{sample}/stats/{sample}.short_summary_assembly.txt", sample=SAMPLES),
         expand(config["spadesPath"] + "/{sample}/stats/{sample}.assemblyStats.txt", sample=SAMPLES)
 

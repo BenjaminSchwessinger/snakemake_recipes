@@ -20,10 +20,10 @@ fastqQCpost :
  mem: 24G
 
 SPADES :
- queue: normal
+ queue: hugemem
  threads: 16
  time: '20:00:00'
- mem: 190G
+ mem: 500G
 
 BUSCO3:
  threads: 16
