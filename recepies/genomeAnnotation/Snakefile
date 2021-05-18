@@ -1,14 +1,12 @@
 import os
 configfile : "config.yaml"
 
-
 SAMPLES = list(set([x.split('.')[0] for x in os.listdir(config["assemblyPath"]) if x.endswith('.fasta')]))
 SAMPLES.sort()
 #print(SAMPLES)
 
 #for testing purposes
-SAMPLES = ["DMTRCTR1303"]
-#SAMPLES = ["DMTRCTR1286", "DMTRCTR140", "DMTRCTR2332","DMTRCTR2990", "DMTRCTR3374",  "DMTRCTR3816",  "DMTRCTR4452", "DMTRCTR6525", "DMTRCTR7788" ]
+#SAMPLES = ["DMTRCTR1303"]
 
 
 
@@ -17,7 +15,6 @@ rule all:
         expand(config["annotationPath"] + "/{sample}/GenomeAnnotation/funAnno/annotate_results/{sample}.annotations.txt", sample=SAMPLES),
         expand(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/antismash/antismash.done", sample=SAMPLES)
 
-#workdir: config["annotationPath"] + "/working"
 
 rule maskGenome:
     input:
@@ -41,6 +38,8 @@ rule funPrep:
     params:
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation")
     run:
+        #changed the clean.py script to run on the compute node in PBS_JOBFS as it would otherwise 
+        #overwrite each other in the same folder where all the jobs are started from.
         shell("mkdir -p {params.predictDir}"),
         shell("funannotate clean --cpus 10 -i {input.maskedGenome} -o {output.cleanedGenome} --pident 80" ),
         shell("funannotate sort --minlen 1000 -i {output.cleanedGenome} -o {output.sortedGenome}") 
@@ -53,39 +52,37 @@ rule funGenPredict:
         stats = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.stats.json",
         gff3 = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.gff3" 
     params:
+        #These $PBS_JOBFS variables are specific to our computer infrastructure on NCI in Australia
+        #all compute will be done on the node with sepific storage hence predict.py will excute in
+        #PBS_JOBFS this is changed in the predict.py script
         tmpPredictdir = directory("$PBS_JOBFS/funAnno"),
-        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno"),
+        predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation"),
         tmpSortedGenome = directory("$PBS_JOBFS/genome.fasta")
     run:
         shell('cp {input.sortedGenome} {params.tmpSortedGenome}'),
         shell('funannotate predict -i {params.tmpSortedGenome} --cpus 48 -o {params.tmpPredictdir} \
 		--species {wildcards.sample} --busco_seed_species botrytis_cinerea'),
         shell('mkdir -p {params.predictDir}'),
-        shell('cp -r {params.tmpPredictdir} {params.predictDir}/../.'),
-        shell('rm -rf {params.predictDir}/predict_misc')
+        shell('cp -r {params.tmpPredictdir} {params.predictDir}/.'),
+        shell('rm -rf {params.predictDir}/funAnno/predict_misc')
 
 rule InterPro:
     input:
-        #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno"),
         proteinSeq = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/predict_results/{sample}.proteins.fa"
     output:
         interproXML = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc/iprscan.xml"
     params:
         interpro = " -f XML -cpu 40 -dp -goterms -pa",
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc"),
-        #tmpDir = directory("$PBS_JOBFS/tmp")
-        tmpDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/IPRStmp")
     run:
+        #Changed the iprscan-local.py script to run on the node using PBS_JOBFS specific to NCI
         shell("mkdir -p {params.predictDir}"),
-        shell("mkdir -p {params.tmpDir}"),
         shell("funannotate iprscan --iprscan_path {config[InterProScan]} -m local --cpus 11 -i {input.proteinSeq} -o {output.interproXML}")
-        #shell("{config[InterProScan]} {params.interpro} -T {params.tmpDir} -o {output.interproXML} -i {input.proteinSeq}"),
-        shell("rm -rf {params.tmpDir}")
 
 rule funFuncAnno:
+    #TO-DO add step that moves funAnno to the node and change the predict step to run on the node in PBS_JOBFS to avoid overwriting stuff
     input:
         interproXML = config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno/annotate_misc/iprscan.xml",
-        #predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
     output:
         funAnnotation = config["annotationPath"] + "/{sample}/GenomeAnnotation/funAnno/annotate_results/{sample}.annotations.txt"
     params:
