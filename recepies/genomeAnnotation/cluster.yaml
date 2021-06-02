@@ -13,9 +13,9 @@ maskGenome :
   time: 12:00:00
 
 funPrep :
- time : '03:00:00'
+ time : '05:00:00'
  mem: 10G
- threads: 8
+ threads: 12
  jobfs: 10G 
 
 funGenPredict :
@@ -25,8 +25,8 @@ funGenPredict :
  jobfs: 10G 
 
 InterPro:
- time : '05:00:00'
- mem : 80G
+ time : '12:00:00'
+ mem : 120G
  threads : 48
  jobfs: 40G 
 

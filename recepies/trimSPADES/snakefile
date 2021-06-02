@@ -75,7 +75,7 @@ rule SPADES:
         assembly=config["spadesPath"] + "/{sample}/assembly/{sample}.fasta"
     threads: 16
     shell:
-        "{config[spades]} --isolate --threads {threads} -o {output.outdir} \
+        "{config[spades]} --isolate --threads {threads} -o {output.outdir} -k 99 127\
         --pe1-1 {input.in1[0]} --pe1-2 {input.in2[0]} --pe1-s {input.in3[0]} \
         --pe1-1 {input.in1[1]} --pe1-2 {input.in2[1]} --pe1-s {input.in3[1]};"
         "cp {output.tmpassembly} {output.assembly}"
@@ -87,8 +87,9 @@ rule Astats:
         outdir=directory(config["spadesPath"] + "/{sample}/stats"),
         astats=config["spadesPath"] + "/{sample}/stats/{sample}.assemblyStats.txt"
     group: "aanalysis"
-    shell:
-        "stats.sh {input.assembly} > {output.astats}"
+    run:
+        shell("mkdir -p output.outdir"),
+        shell("stats.sh {input.assembly} > {output.astats}")
 
 rule BUSCO3:
     input:
@@ -98,10 +99,11 @@ rule BUSCO3:
         shortsum=config["spadesPath"] + "/{sample}/run_BUSCO/short_summary_BUSCO.txt",
         shortsum2=config["spadesPath"] + "/{sample}/stats/{sample}.short_summary_assembly.txt"
     group: "aanalysis"
-    shell:
-        "cd {output.outdir}/..;"
-        "run_BUSCO.py \
+    run:
+        shell("mkdir -p {output.outdir}"),
+        shell("cd {output.outdir}/.."),
+        shell("cd {output.outdir}/..;run_BUSCO.py \
          -i {input.assembly} -l {config[busconlin]} \
         -o BUSCO -m genome -c 16 -f;"
-        "cp {output.shortsum} {output.shortsum2}"
+        "cp {output.shortsum} {output.shortsum2}")
      
