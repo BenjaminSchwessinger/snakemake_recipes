@@ -88,6 +88,9 @@ rule funFuncAnno:
     params:
         predictDir = directory(config["annotationPath"]  + "/{sample}/GenomeAnnotation/funAnno")
     run:
+        #shell("cp {params.predictDir} $PBS_JOBFS/funAnno");
+        #shell("cd $PBS_JOBFS;funannotate annotate --cpus 24 -i $PBS_JOBFS/funAnno");
+        #shell("cp -r $PBS_JOBFS/funAnno {params.predictDir}");
         shell("funannotate annotate --cpus 24 -i {params.predictDir}")
 
 rule Antismash:
@@ -103,5 +106,5 @@ rule Antismash:
         shell("antismash {params.antismashParam} {input.gff3} {input.sortedGenome}"),
         shell("touch {output.antismashDone}")
          
-####Old below#############
-
+####Thoughts for improvements#############
+#
