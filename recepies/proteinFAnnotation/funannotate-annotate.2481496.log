@@ -1,0 +1,5 @@
+[04/26/21 12:34:53]: /g/data/xf3/bxs800/miniconda3/envs/funannotate/bin/funannotate annotate --cpus 24 -i /scratch/xf3/bxs800/analysis/PenX/funannotate/funAnno
+
+[04/26/21 12:34:54]: OS: CentOS Linux 8, 96 cores, ~ 198 GB RAM. Python: 3.7.10
+[04/26/21 12:34:54]: Running 1.8.8
+[04/26/21 12:34:54]: Funannotate database not properly configured, run funannotate setup.

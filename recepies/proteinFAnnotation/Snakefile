@@ -1,0 +1,45 @@
+import os
+configfile : "config.yaml"
+
+
+
+#add target genome here. Add manually.
+SAMPLES = ["Penicillium_sp._X"]
+sample = "Penicillium_sp._X"
+print(SAMPLES)
+
+rule all:
+    input:
+        expand(config["annotationPath"] + "/funAnno/annotate_results/{sample}.annotations.txt", sample=SAMPLES)
+
+
+rule InterPro:
+    input:
+        proteinSeq = config["annotationPath"]  + "/funAnno/update_results/" + sample + ".proteins.fa"
+    output:
+        interproXML = config["annotationPath"]  + "/funAnno/annotate_misc/iprscan.xml"
+    params:
+        interpro = " -f XML -cpu 44 -dp -goterms -pa",
+        predictDir = directory(config["annotationPath"]  + "/funAnno")
+    run:
+        shell("{config[InterProScan]} {params.interpro} -T {params.predictDir}/itmp -o {output.interproXML} -i {input.proteinSeq}"),
+        shell("rm -r {params.predictDir}/itmp")
+
+###add rule antismash####
+
+
+rule funFuncAnno:
+    input:
+        interproXML = config["annotationPath"]  + "/funAnno/annotate_misc/iprscan.xml",
+        #predictDir = directory(config["annotationPath"]  + "/funAnno")
+    output:
+        funAnnotation = config["annotationPath"] + "/funAnno/annotate_results/{sample}.annotations.txt"
+    params:
+        predictDir = directory(config["annotationPath"]  + "/funAnno")
+    run:
+        shell("funannotate annotate --cpus 24 -i {params.predictDir}")
+
+
+         
+####Old below#############
+

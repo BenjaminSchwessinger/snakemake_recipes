@@ -2,42 +2,31 @@ __default__:
   mem: 12G
   queue: normal
   time: '01:00:00'
-  jobfs: 80G
+  jobfs: 1G
   project: xf3
   name: "SNK_{rule}"
   threads: 1
 
 maskGenome :
-  threads: 48
-  mem: 50G
-  time: 12:00:00
+  threads: 16
+  mem: 24G
+  time: 24:00:00
 
 funPrep :
- time : '05:00:00'
+ time : '03:00:00'
  mem: 10G
- threads: 12
- jobfs: 10G 
 
 funGenPredict :
  time : '04:00:00'
  mem : 80G
  threads : 48
- jobfs: 10G 
 
 InterPro:
- time : '12:00:00'
- mem : 120G
+ time : '05:00:00'
+ mem : 150G
  threads : 48
- jobfs: 40G 
 
 funFuncAnno:
  time : '05:00:00'
  mem : 120G
  threads : 24
- jobfs: 10G 
-
-Antismash:
- time : '05:00:00'
- mem : 60G
- threads : 32
- jobfs: 10G 

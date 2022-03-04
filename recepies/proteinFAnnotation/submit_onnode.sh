@@ -1,25 +1,18 @@
 #!/bin/bash
 #PBS -P xf3
 #PBS -q normal
-#PBS -l walltime=48:00:00
+#PBS -l walltime=24:00:00
 #PBS -l ncpus=2
 #PBS -l mem=2GB
-#PBS -l jobfs=80GB
+#PBS -l jobfs=1GB
 #PBS -l wd
 #PBS -l storage=scratch/xf3+scratch/be39+gdata/be39+gdata/xf3
 
-source /home/800/bxs800/scripts/snakemake/recepies/genomeAnnotation/gadimod.sh
+source /home/800/bxs800/scripts/snakemake/recepies/proteinFAnnotation/gadimod.sh
 
 conda activate funannotate
 
 set -ueo pipefail
-
-
-#add the move to the node to it
-#now=$(pwd)
-#cp -r * $PBS_JOBFS
-#cd $PBS_JOBFS
-
 logdir=gadi/log
 mkdir -p $logdir
 mkdir -p data/log/
@@ -33,13 +26,12 @@ QSUB="$QSUB -l wd -j oe -o $logdir -P {cluster.project} -V"
 snakemake                                                          \
     -j 1000                                                        \
     --max-jobs-per-second 2                                        \
-    --cluster-config /home/800/bxs800/scripts/snakemake/recepies/genomeAnnotation/cluster.yaml                             \
+    --cluster-config /home/800/bxs800/scripts/snakemake/recepies/proteinFAnnotation/cluster.yaml                             \
     --local-cores ${PBS_NCPUS:-1}                                  \
-    --js /home/800/bxs800/scripts/snakemake/recepies/genomeAnnotation/jobscript.sh                                         \
+    --js /home/800/bxs800/scripts/snakemake/recepies/proteinFAnnotation/jobscript.sh                                         \
     --nolock                                                       \
     --rerun-incomplete                                             \
     --keep-going                                                   \
     --cluster "$QSUB"                                              \
     "$TARGET"                                                      
 
-#cp -r * ${now}/

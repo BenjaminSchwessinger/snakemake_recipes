@@ -1,8 +1,5 @@
 ###Sample in path
-
-assemblyPath  : "/scratch/xf3/bxs800/analysis/Pchondrillina/genome"
-annotationPath : "/scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis"
-
+annotationPath : "/scratch/xf3/bxs800/analysis/PenX/funannotate"
 
 ###Abspath to components
 RepeatMasker : "/g/data/xf3/bxs800/miniconda3/envs/SoilCarbon/share/RepeatMasker/RepeatMasker"

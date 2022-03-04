@@ -1,0 +1,33 @@
+[03/04/22 04:59:28]: /g/data/xf3/bxs800/miniconda3/envs/funannotate/bin/funannotate annotate --cpus 24 -i /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno
+
+[03/04/22 04:59:28]: OS: Rocky Linux 8.5, 96 cores, ~ 198 GB RAM. Python: 3.7.10
+[03/04/22 04:59:28]: Running 1.8.8
+[03/04/22 04:59:29]: No NCBI SBT file given, will use default, however if you plan to submit to NCBI, create one and pass it here '--sbt'
+[03/04/22 04:59:29]: Found existing output directory /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno. Warning, will re-use any intermediate files found.
+[03/04/22 04:59:29]: Parsing input files
+[03/04/22 04:59:29]: Existing tbl found: /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/predict_results/PcHaploid.tbl
+[03/04/22 04:59:33]: TBL file: /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/annotate_misc/genome.tbl
+[03/04/22 04:59:33]: GFF3 file: /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/predict_results/PcHaploid.gff3
+[03/04/22 04:59:33]: Proteins file: /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/annotate_misc/genome.proteins.fasta
+[03/04/22 04:59:47]: Adding Functional Annotation to PcHaploid, NCBI accession: None
+[03/04/22 04:59:47]: Annotation consists of: 8,765 gene models
+[03/04/22 04:59:47]: 8,615 protein records loaded
+[03/04/22 04:59:48]: Running HMMer search of PFAM version 33.1
+[03/04/22 05:01:08]: 6,209 annotations added
+[03/04/22 05:01:08]: Running Diamond blastp search of UniProt DB version 2020_06
+[03/04/22 05:01:08]: diamond blastp --sensitive --query /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/annotate_misc/genome.proteins.fasta --threads 24 --out /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/annotate_misc/uniprot.xml --db /g/data/xf3/bxs800/databases/funannotate/uniprot.dmnd --evalue 1e-05 --max-target-seqs 1 --outfmt 5
+[03/04/22 05:01:30]: 296 valid gene/product annotations from 384 total
+[03/04/22 05:01:36]: Running Eggnog-mapper
+[03/04/22 05:01:36]: emapper.py -m diamond -i /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/annotate_misc/genome.proteins.fasta -o eggnog --cpu 24
+[03/04/22 05:01:36]: CMD ERROR: emapper.py -m diamond -i /scratch/xf3/bxs800/analysis/Pchondrillina/genomeAnalysis/PcHaploid/GenomeAnnotation/funAnno/annotate_misc/genome.proteins.fasta -o eggnog --cpu 24
+[03/04/22 05:01:36]: Traceback (most recent call last):
+  File "/g/data/xf3/bxs800/miniconda3/envs/funannotate/bin/emapper.py", line 629, in <module>
+    args = parse_args(parser)
+  File "/g/data/xf3/bxs800/miniconda3/envs/funannotate/bin/emapper.py", line 441, in parse_args
+    set_data_path(os.environ["EGGNOG_DATA_DIR"])
+  File "/g/data/xf3/bxs800/miniconda3/envs/funannotate/lib/python3.7/site-packages/eggnogmapper/common.py", line 70, in set_data_path
+    DATA_PATH = existing_dir(data_path)
+  File "/g/data/xf3/bxs800/miniconda3/envs/funannotate/lib/python3.7/site-packages/eggnogmapper/common.py", line 297, in existing_dir
+    raise TypeError('not a valid directory "%s"' %dname)
+TypeError: not a valid directory "/g/data/be39/bxs800/db/EggNog"
+
