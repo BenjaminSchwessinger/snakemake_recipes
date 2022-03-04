@@ -78,7 +78,7 @@ rule hisat2A:
     output:
         bam=config["hisat2"] + "/{sample}/" + config["hisat2_ref"][0] + ".{sample}.sorted.bam",
     wildcard_constraints:
-        sample=".{8}"
+        sample=".{5}"
     shell:
         "hisat2 --max-intronlen 3000 --threads {config[hisat2_mapT]} -x {config[hisat2_refPATH][0]} --dta \
 	-1 {params.in1} -2 {params.in2} --no-unal | samtools sort -O BAM -@ {config[hisat2_sortT]} -o {output.bam} -;"
@@ -92,7 +92,7 @@ rule trinityA:
     params:
         outdir=config["hisat2"] + "/../trinityGG/{sample}/" + config["hisat2_ref"][0] + "/trinity/"
     wildcard_constraints:
-        sample=".{8}"
+        sample=".{5}"
     shell:
         "Trinity --jaccard_clip --max_memory 60G \
           --genome_guided_bam {input.bam} \

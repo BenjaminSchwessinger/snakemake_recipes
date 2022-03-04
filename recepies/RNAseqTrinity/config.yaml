@@ -1,7 +1,7 @@
 ###Sample in path
-untrimmedPath : "/scratch/xf3/bxs800/data/PenX/RNAseq/untrimmed"
+untrimmedPath : "/scratch/xf3/bxs800/data/Pc/RNAseq/untrimmed"
 
-trimmedPath  : "/scratch/xf3/bxs800/data/PenX/RNAseq/trimmed"
+trimmedPath  : "/scratch/xf3/bxs800/data/Pc/RNAseq/trimmed"
 
 
 ###Abspath to components
@@ -12,15 +12,15 @@ trimmomatic : "/home/800/bxs800/programs/Trimmomatic-0.39/trimmomatic-0.39.jar"
 adapters : "/home/800/bxs800/programs/Trimmomatic-0.39/adapters/all_adapters.fa"
 
 #Analysis path
-hisat2 : "/scratch/xf3/bxs800/analysis/PenX/hisat2Index"
+hisat2 : "/scratch/xf3/bxs800/analysis/Pchondrillina/hisat2Index"
 
-trinity : "/scratch/xf3/bxs800/analysis/PenX/trinity"
+trinity : "/scratch/xf3/bxs800/analysis/Pchondrillina/trinity"
 
 #hisat2 components
 
-hisat2_refPATH : ["/scratch/xf3/bxs800/analysis/PenX/hisat2Index/PenX_GenomeJW"] 
+hisat2_refPATH : ["/scratch/xf3/bxs800/analysis/Pchondrillina/hisatIndex/PcHaploid_masked"] 
 
-hisat2_ref : [ "PenX_GenomeJW"]
+hisat2_ref : [ "PcHaploid_masked"]
 
 hisat2_sortT : "4"
 
